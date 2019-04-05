@@ -61,7 +61,7 @@ public class Interface
 		    			JOptionPane.showMessageDialog(frame, "Nothing entered, depot has not been added", "Error", JOptionPane.PLAIN_MESSAGE);
 		    	}
 		    	else if (depot1 != null && depot2 != null)
-		    		JOptionPane.showInputDialog(frame, "2 depots already exist", "Error", JOptionPane.PLAIN_MESSAGE);
+		    		JOptionPane.showMessageDialog(frame, "2 depots already exist", "Error", JOptionPane.PLAIN_MESSAGE);
 		    		
 		    		
 		    	/*if (depot1.getName() == null || depot1.getName().isEmpty()) { // if depot1 is empty, create depot
@@ -158,9 +158,9 @@ public class Interface
 		    		
 		    		
 		    	    String nameEntered = name.getText();
-		    	    Price priceEntered = price.getValue();
-		    	    Weight weightEntered = (Weight)weight.getValue();
-		    	    int quantityEntered = (int)quantity.getValue();
+		    	    String priceEntered = price.getText();
+		    	    String weightEntered = weight.getText();
+		    	    String quantityEntered = quantity.getText();
 		    	    System.out.println(nameEntered);
 		    	    System.out.println(priceEntered);
 		    	    System.out.println(weightEntered);
