@@ -135,7 +135,7 @@ public class Interface
 		JButton addProductB = new JButton("Add product");
 		addProductB.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	NumberFormat priceFormat = NumberFormat.getCurrencyInstance();
+		    	NumberFormat priceFormat = NumberFormat.getInstance();
 		    	NumberFormat weightFormat = NumberFormat.getNumberInstance();
 		    	NumberFormat quantityFormat = NumberFormat.getNumberInstance();
 		    	
@@ -148,7 +148,7 @@ public class Interface
 		    	quantity.setValue(null);
 		    	Object[] form = {
 		    	    "Name:", name,
-		    	    "Price:", price,
+		    	    "Price: $", price,
 		    	    "Weight (g): ", weight,
 		    	    "Quantity: ", quantity
 		    	};
@@ -161,15 +161,14 @@ public class Interface
 		    	    String priceEntered = price.getText();
 		    	    String weightEntered = weight.getText();
 		    	    String quantityEntered = quantity.getText();
-		    	    System.out.println(nameEntered);
-		    	    System.out.println(priceEntered);
-		    	    System.out.println(weightEntered);
-		    	    System.out.println(quantityEntered);
 		    	    if (name.getText().length()<=0 || price.getText().length()<=0 || weight.getText().length()<=0 || quantity.getText().length()<=0) {
 		    	    	JOptionPane.showMessageDialog(frame, "Fill in all fields", "Error", JOptionPane.PLAIN_MESSAGE);
 		    	    }
-		    	    else if (name.getText().length()>0 || price.getText().length()>0 && Integer.parseInt(price.getText())>0 || weight.getText().length()>0 || quantity.getText().length()>0) {
-		    	    	
+		    	    else if (name.getText().length()>0 || price.getText().length()>0 && Integer.parseInt(price.getText())>0 || weight.getText().length()>0 || quantity.getText().length()>0) {		    	    	
+		    	    	System.out.println(nameEntered);
+			    	    System.out.println(priceEntered);
+			    	    System.out.println(weightEntered);
+			    	    System.out.println(quantityEntered);
 		    	    }
 		    	}
 		    	
