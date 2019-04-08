@@ -114,11 +114,12 @@ public class Interface
 		    	else if (depot2 == null)
 		    		JOptionPane.showMessageDialog(frame, "Depot 1: "+depot1.getName()+" has "+depot1.getProduct()+" products", "List of depots", JOptionPane.PLAIN_MESSAGE);
 		    	else if (depot1 == null)
-		    		JOptionPane.showMessageDialog(frame, "Depot 2: "+depot1.getName()+" has "+depot2.getProduct()+" products", "List of depots", JOptionPane.PLAIN_MESSAGE);
-		    	else if (depot1 != null && depot2 != null)
+		    		JOptionPane.showMessageDialog(frame, "Depot 2: "+depot2.getName()+" has "+depot2.getProduct()+" products", "List of depots", JOptionPane.PLAIN_MESSAGE);
+		    	else if (depot1 != null && depot2 != null) 
 		    		JOptionPane.showMessageDialog(frame, "Depot 1: "+depot1.getName()+" has "+depot1.getProduct()+" products\nDepot 2: "+depot2.getName()+" has "+depot2.getProduct()+" products", "List of depots", JOptionPane.PLAIN_MESSAGE);
-		    		
-		    		
+
+		    	
+		    	
 		    	/*if ((depot1.getName() == null || depot1.getName().isEmpty()) && (depot2.getName() == null || depot2.getName().isEmpty()))
 		    	JOptionPane.showMessageDialog(frame, "No depots", "List of depots", JOptionPane.PLAIN_MESSAGE);
 		    	else if (depot2.getName() == null || depot2.getName().isEmpty())
@@ -139,36 +140,36 @@ public class Interface
 		    	NumberFormat weightFormat = NumberFormat.getNumberInstance();
 		    	NumberFormat quantityFormat = NumberFormat.getNumberInstance();
 		    	
-		    	JTextField name = new JTextField();
-		    	JFormattedTextField price = new JFormattedTextField(priceFormat);
-		    	price.setValue(null);
-		    	JFormattedTextField weight = new JFormattedTextField(weightFormat);
-		    	weight.setValue(null);
-		    	JFormattedTextField quantity = new JFormattedTextField(quantityFormat);
-		    	quantity.setValue(null);
+		    	JTextField namef = new JTextField();
+		    	JFormattedTextField pricef = new JFormattedTextField(priceFormat);
+		    	pricef.setValue(null);
+		    	JFormattedTextField weightf = new JFormattedTextField(weightFormat);
+		    	weightf.setValue(null);
+		    	JFormattedTextField quantityf = new JFormattedTextField(quantityFormat);
+		    	quantityf.setValue(null);
 		    	Object[] form = {
-		    	    "Name:", name,
-		    	    "Price: $", price,
-		    	    "Weight (g): ", weight,
-		    	    "Quantity: ", quantity
+		    	    "Name:", namef,
+		    	    "Price: $", pricef,
+		    	    "Weight (g): ", weightf,
+		    	    "Quantity: ", quantityf
 		    	};
 
 		    	int option = JOptionPane.showConfirmDialog(null, form, "Add Product", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		    	if (option == JOptionPane.OK_OPTION) {
 		    		
 		    		
-		    	    String nameEntered = name.getText();
-		    	    String priceEntered = price.getText();
-		    	    String weightEntered = weight.getText();
-		    	    String quantityEntered = quantity.getText();
-		    	    if (name.getText().length()<=0 || price.getText().length()<=0 || weight.getText().length()<=0 || quantity.getText().length()<=0) {
+		    	    
+		    	    if (namef.getText().length()<=0 || pricef.getText().length()<=0 || weightf.getText().length()<=0 || quantityf.getText().length()<=0) {
 		    	    	JOptionPane.showMessageDialog(frame, "Fill in all fields", "Error", JOptionPane.PLAIN_MESSAGE);
 		    	    }
-		    	    else if (name.getText().length()>0 || price.getText().length()>0 && Integer.parseInt(price.getText())>0 || weight.getText().length()>0 || quantity.getText().length()>0) {		    	    	
-		    	    	System.out.println(nameEntered);
-			    	    System.out.println(priceEntered);
-			    	    System.out.println(weightEntered);
-			    	    System.out.println(quantityEntered);
+		    	    else if (namef.getText().length()>0 || pricef.getText().length()>0 && Integer.parseInt(pricef.getText())>0 || weightf.getText().length()>0 || quantityf.getText().length()>0) {
+		    	    	String nameEntered = namef.getText();
+		    	    	float priceEntered = Float.parseFloat(pricef.getText());
+		    	    	int weightEntered = Integer.parseInt(weightf.getText());
+		    	    	int quantityEntered = Integer.parseInt(quantityf.getText());
+		    	    	
+		    	    	if (priceEntered < 0 || weightEntered < 0 || quantityEntered < 0)
+		    	    		JOptionPane.showMessageDialog(frame, "Values cannot be negative", "Error", JOptionPane.PLAIN_MESSAGE);
 		    	    }
 		    	}
 		    	
