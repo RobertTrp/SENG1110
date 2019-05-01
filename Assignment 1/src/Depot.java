@@ -23,13 +23,28 @@ public class Depot
 			product3 = new Product();
 	}
 	public int getProduct() {
-		if (product1 != null && product2 == null && product3 == null)
+		if ((product1 != null && product2 == null && product3 == null) || (product1 == null && product2 != null && product3 == null) || (product1 == null && product2 == null && product3 != null))
 			return 1;
-		else if (product1 != null && product2 != null && product3 == null)
+		else if ((product1 != null && product2 != null && product3 == null) || (product1 != null && product2 == null && product3 != null) || (product1 == null && product2 != null && product3 != null))
 			return 2;
 		else if (product1 != null && product2 != null && product3 != null)
 			return 3;
 		return 0;
+	}
+	public String getProduct1Name() {
+		if (product1 != null)
+			return product1.getName();
+		return null;
+	}
+	public String getProduct2Name() {
+		if (product2 != null)
+			return product2.getName();
+		return null;
+	}
+	public String getProduct3Name() {
+		if (product3 != null)
+			return product3.getName();
+		return null;
 	}
 }
 	

@@ -90,17 +90,22 @@ public class Interface
 		JButton removeDepotB = new JButton("Remove depot");
 		removeDepotB.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	String removeDepot = JOptionPane.showInputDialog(frame, "Please enter name of depot to remove", "Remove depot", JOptionPane.PLAIN_MESSAGE);
-		    	if (depot1 != null && removeDepot != null && removeDepot.length()>0 && removeDepot.equalsIgnoreCase(depot1.getName())) {
-		    		JOptionPane.showMessageDialog(frame, "Depot "+depot1.getName()+" has been removed", "DEPOT REMOVED", JOptionPane.PLAIN_MESSAGE);
-		    		depot1 = null;
-		    		}
-			    else if (depot2 != null && removeDepot != null && removeDepot.length()>0 && removeDepot.equalsIgnoreCase(depot2.getName())) {
-		    			JOptionPane.showMessageDialog(frame, "Depot "+depot2.getName()+" has been removed", "DEPOT REMOVED", JOptionPane.PLAIN_MESSAGE);
-		    			depot2 = null;
-		    		}
-			    else if (removeDepot != null)
-			    		JOptionPane.showMessageDialog(frame, "Depot with that name does not exist", "Error", JOptionPane.PLAIN_MESSAGE);
+		    	String removeDepot = null;
+		    	if (depot1 != null || depot2 != null) {
+		    		removeDepot = JOptionPane.showInputDialog(frame, "Please enter name of depot to remove", "Remove depot", JOptionPane.PLAIN_MESSAGE);
+			    	if (depot1 != null && removeDepot != null && removeDepot.length()>0 && removeDepot.equalsIgnoreCase(depot1.getName())) {
+			    		JOptionPane.showMessageDialog(frame, "Depot "+depot1.getName()+" has been removed", "DEPOT REMOVED", JOptionPane.PLAIN_MESSAGE);
+			    		depot1 = null;
+			    		}
+				    else if (depot2 != null && removeDepot != null && removeDepot.length()>0 && removeDepot.equalsIgnoreCase(depot2.getName())) {
+			    			JOptionPane.showMessageDialog(frame, "Depot "+depot2.getName()+" has been removed", "DEPOT REMOVED", JOptionPane.PLAIN_MESSAGE);
+			    			depot2 = null;
+			    		}
+				    else if (removeDepot != null)
+				    		JOptionPane.showMessageDialog(frame, "Depot with that name does not exist", "Error", JOptionPane.PLAIN_MESSAGE);
+			    	}
+			    	else
+			    		JOptionPane.showMessageDialog(frame, "No depots exist", "Error", JOptionPane.PLAIN_MESSAGE);
 		    }
 		});
 		
@@ -136,7 +141,23 @@ public class Interface
 		JButton addProductB = new JButton("Add product");
 		addProductB.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	NumberFormat priceFormat = NumberFormat.getInstance();
+		    	String nameEntered = null;
+		    	if (depot1 != null || depot2 != null) {
+		    		nameEntered = JOptionPane.showInputDialog(frame, "Please enter name of product to add", "Add product: Name", JOptionPane.PLAIN_MESSAGE);
+		    		if (nameEntered == product1.getName())
+		    	}
+		    	else
+		    		JOptionPane.showMessageDialog(frame, "No depots exist", "Error", JOptionPane.PLAIN_MESSAGE);
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	/*NumberFormat priceFormat = NumberFormat.getInstance();
 		    	NumberFormat weightFormat = NumberFormat.getNumberInstance();
 		    	NumberFormat quantityFormat = NumberFormat.getNumberInstance();
 		    	
@@ -175,7 +196,7 @@ public class Interface
 		    	
 		    	 else {
 		    	    System.out.println("Login canceled");
-		    	 }
+		    	 }*/
 		    }
 		    
 		});

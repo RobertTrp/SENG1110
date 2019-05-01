@@ -18,7 +18,7 @@ public class Product
 	public void setQuantity(int newQuantity) {
 		quantity = newQuantity;
 	}
-	public String getname() {
+	public String getName() {
 		return name;
 	}
 	public double getPrice() {
