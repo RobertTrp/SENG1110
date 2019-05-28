@@ -92,7 +92,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public String getProductName(int productNumber)
 	{
-		if (productNumber <= productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0 && p[productNumber] != null)
 			return p[productNumber].getName();
 		return null;
 	}
@@ -102,7 +102,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public double getProductWeight(int productNumber)
 	{
-		if (productNumber <= productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0)
 			return p[productNumber].getWeight();
 		return 0;
 	}
@@ -112,7 +112,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public int getProductQuantity(int productNumber)
 	{
-		if (productNumber <= productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0)
 			return p[productNumber].getQuantity();
 		return 0;
 	}
@@ -122,7 +122,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public double getProductPrice(int productNumber)
 	{
-		if (productNumber <= productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0)
 			return p[productNumber].getPrice();
 		return 0;
 	}
@@ -134,7 +134,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void setProductQuantity(int newQuantity, int productNumber)
 	{
-		if (productNumber <= productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0)
 			p[productNumber].setQuantity(newQuantity);
 	}
 
@@ -143,7 +143,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void clearProduct(int productNumber)
 	{
-		if (productNumber <= productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0)
 		{
 			for (int i = productNumber; i < productCount-1; i++)
 			{
