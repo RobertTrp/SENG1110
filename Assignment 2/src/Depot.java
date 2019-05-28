@@ -11,7 +11,9 @@
 public class Depot
 {
 	private String name;
-	private Product product1, product2, product3;
+	private Product[] p = new Product[5];
+	private static int productCount = 0;
+	
 	
 	/*/************************************************************************************************************************************************************************
 	 * When this method is called it returns the private variable 'name'
@@ -44,29 +46,14 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void setProduct(String newName, int newQuantity, double newWeight, double newPrice)
 	{
-		if (product1 == null)
+		if (productCount < p.length)
 		{
-			product1 = new Product();
-			product1.setName(newName);
-			product1.setQuantity(newQuantity);
-			product1.setWeight(newWeight);
-			product1.setPrice(newPrice);
-		}
-		else if (product1 != null && product2 == null)
-		{
-			product2 = new Product();
-			product2.setName(newName);
-			product2.setQuantity(newQuantity);
-			product2.setWeight(newWeight);
-			product2.setPrice(newPrice);
-		}
-		else if (product1 != null && product2 != null && product3 == null)
-		{
-			product3 = new Product();
-			product3.setName(newName);
-			product3.setQuantity(newQuantity);
-			product3.setWeight(newWeight);
-			product3.setPrice(newPrice);
+			p[productCount] = new Product();
+			p[productCount].setName(newName);
+			p[productCount].setQuantity(newQuantity);
+			p[productCount].setWeight(newWeight);
+			p[productCount].setPrice(newPrice);
+			productCount++;
 		}
 	}
 	
@@ -75,13 +62,29 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public int getProduct()
 	{
-		if ((product1 != null && product2 == null && product3 == null) || (product1 == null && product2 != null && product3 == null) || (product1 == null && product2 == null && product3 != null))
-			return 1;
-		else if ((product1 != null && product2 != null && product3 == null) || (product1 != null && product2 == null && product3 != null) || (product1 == null && product2 != null && product3 != null))
-			return 2;
-		else if (product1 != null && product2 != null && product3 != null)
-			return 3;
-		return 0;
+		return productCount;
+	}
+	
+	
+	
+	public int checkProductPosition(String nameEntered)
+	{
+		for (int i = 0; i <= productCount; i++)
+		{
+			if (p[i] != null && nameEntered.equalsIgnoreCase(p[i].getName()))
+				return i;
+		}
+		return -1;
+	}
+	
+	public String checkProductName(String nameEntered)
+	{
+		for (int i = 0; i <= productCount; i++)
+		{
+			if (p[i] != null && nameEntered.equalsIgnoreCase(p[i].getName()))
+				return p[i].getName();
+		}
+		return null;
 	}
 	
 	/*/************************************************************************************************************************************************************************
@@ -89,12 +92,8 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public String getProductName(int productNumber)
 	{
-		if (product1 != null && productNumber == 1)
-			return product1.getName();
-		else if (product2 != null && productNumber == 2)
-			return product2.getName();
-		else if (product3 != null && productNumber == 3)
-			return product3.getName();
+		if (productNumber <= productCount && productNumber >= 0)
+			return p[productNumber].getName();
 		return null;
 	}
 	
@@ -103,12 +102,8 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public double getProductWeight(int productNumber)
 	{
-		if (product1 != null && productNumber == 1)
-			return product1.getWeight();
-		else if (product2 != null && productNumber == 2)
-			return product2.getWeight();
-		else if (product3 != null && productNumber == 3)
-			return product3.getWeight();
+		if (productNumber <= productCount && productNumber >= 0)
+			return p[productNumber].getWeight();
 		return 0;
 	}
 	
@@ -117,12 +112,8 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public int getProductQuantity(int productNumber)
 	{
-		if (product1 != null && productNumber == 1)
-			return product1.getQuantity();
-		else if(product2 != null && productNumber == 2)
-			return product2.getQuantity();
-		else if (product3 != null && productNumber == 3)
-			return product3.getQuantity();
+		if (productNumber <= productCount && productNumber >= 0)
+			return p[productNumber].getQuantity();
 		return 0;
 	}
 	
@@ -131,12 +122,8 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public double getProductPrice(int productNumber)
 	{
-		if (product1 != null && productNumber == 1)
-			return product1.getPrice();
-		else if(product2 != null && productNumber == 2)
-			return product2.getPrice();
-		else if (product3 != null && productNumber == 3)
-			return product3.getPrice();
+		if (productNumber <= productCount && productNumber >= 0)
+			return p[productNumber].getPrice();
 		return 0;
 	}
 	
@@ -147,12 +134,8 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void setProductQuantity(int newQuantity, int productNumber)
 	{
-		if (product1 != null && productNumber == 1)
-			product1.setQuantity(newQuantity);
-		else if (product2 != null && productNumber == 2)
-			product2.setQuantity(newQuantity);
-		else if (product3 != null && productNumber == 3)
-			product3.setQuantity(newQuantity);
+		if (productNumber <= productCount && productNumber >= 0)
+			p[productNumber].setQuantity(newQuantity);
 	}
 
 	/*/************************************************************************************************************************************************************************
@@ -160,20 +143,16 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void clearProduct(int productNumber)
 	{
-		if (product1 != null && productNumber == 1)
+		if (productNumber <= productCount && productNumber >= 0)
 		{
-			product1.clear();
-			product1 = null;
-		}
-		else if (product2 != null && productNumber == 2)
-		{
-			product2.clear();
-			product2 = null;
-		}
-		else if (product3 != null && productNumber == 3)
-		{
-			product3.clear();
-			product3 = null;
+			for (int i = productNumber; i < productCount-1; i++)
+			{
+				System.out.print(i);
+				p[i] = p[i+1];
+			}
+			p[productCount].clear();
+			p[productCount] = null;
+			productCount--;
 		}
 	}
 	

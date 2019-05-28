@@ -12,8 +12,9 @@ import java.util.*;
 
 public class Interface
 {
-	static Scanner console = new Scanner(System.in);
-	private Depot depot1, depot2;
+	private static Scanner console = new Scanner(System.in);
+	private Depot[] d = new Depot[4];
+	private static int depotCount = 0;
 	
 	public static void main(String[] args)
 	{
@@ -99,61 +100,56 @@ public class Interface
 	 * If the maximum amount of depots are not set
 	 * User is requested to input a name for the depot
 	 * If a depot with that name already exists, the user is asked to input a different name.
-	 ***************************************************************************************************************************************************************************/	
+	 ***************************************************************************************************************************************************************************/
+	
 	public void addDepot()
 	{
-		String depotSet = null;																					// Initialise variable for depot name input
-    	if (depot1 == null) 
-    	{
-			System.out.print("Please enter name for depot 1: ");												// Request input name for depot 1
-			depotSet = console.nextLine(); 																		// Read depot name entered from console
+		String depotEntered = null;
+		if (depotCount < 4) {
+			System.out.print("Please enter name for depot to be added: ");
+			depotEntered = console.nextLine();
 			System.out.print("\n");
-			
-			if (depot2 != null)																					// If depot 2 exists
+			while (checkDepotPosition(depotEntered) >= 0)
 			{
-				while (depotSet.equalsIgnoreCase(depot2.getName())) 											// while the input depot name equals the name of depot 2
-				{
-					System.out.print("Name already exists. Please enter a different name: ");					// Request the user to input a different depot name
-					depotSet = console.nextLine();																// Read depot name entered from console
-					System.out.print("\n");
-				}
-			}
-			if (depotSet != null && depotSet.length() > 0)														// Chek if a depot name was input
-			{
-				depot1 = new Depot(); 																			// Create depot1
-				depot1.setName(depotSet);																		// Set the name for depot1
-				System.out.println("Depot "+depot1.getName()+" has been successfully added\n"); 				// Inform the user that depot was successfully created
-			}
-			else if (depotSet !=null && depotSet.length() == 0)													// Else if nothing was entered
-				System.out.println("Nothing entered. Depot has not been added\n");								// Inform user nothing was entered and a depot has not been created
-    	}
-    	
-    	else if (depot1 != null && depot2 == null)																// Check if depot1 already exists
-    	{ 
-			System.out.print("Please enter name for depot 2: "); 												// Request input for depot 2
-			depotSet = console.nextLine();																		// Read depot name entered from console
-			System.out.print("\n");
-			while (depotSet.equalsIgnoreCase(depot1.getName()))													// While the input depot name equals the name of depot 1
-			{
-				System.out.print("Name already exists. Please enter a different name: ");						// Request the user to input a different depot name
-				depotSet = console.nextLine();																	// Read depot name entered from console
+				System.out.print("Name already exists. Please enter a different name: ");					// Request the user to input a different depot name
+				depotEntered = console.nextLine();																// Read depot name entered from console
 				System.out.print("\n");
 			}
-			if	(depotSet != null && depotSet.length() > 0)														// Check if a depot name was input
+			if (depotEntered != null && depotEntered.length() > 0)
 			{
-				depot2 = new Depot(); 																			// Create depot2
-				depot2.setName(depotSet);																		// Set the name for depot 2
-				System.out.println("Depot "+depot2.getName()+" has been successfully added.\n");				// Inform the user that depot was successfully created
+				d[depotCount] = new Depot();
+				d[depotCount].setName(depotEntered);
+				System.out.println("Depot "+depotEntered+" has been successfully added\n"); 				// Inform the user that depot was successfully created
+				depotCount++;
 			}
-			else if (depotSet !=null && depotSet.length() == 0)													// Else if nothing was entered
-				System.out.println("Nothing entered. Depot has not been added.\n");								// Inform user nothing was entered and a depot has not been created
-    	}
-    	else if (depot1 != null && depot2 != null)																// Check if both depot 1 and depot 2 exist
-    	{
-    		System.out.println("2 depots already exist.\n");													// Inform user that 2 depots already exist
-    	}
+			else if (depotEntered != null && depotEntered.length() == 0)
+				System.out.println("Nothing entered. Depot has not been added\n");								// Inform user nothing was entered and a depot has not been created		
+		}
+		else
+			System.out.println("4 depots already exist.\n");
 		enterContinue();
 	}
+	
+	public int checkDepotPosition(String depotEntered)
+	{
+		for (int i = 0; i <= depotCount; i++)
+		{
+			if (d[i] != null && depotEntered.equalsIgnoreCase(d[i].getName()))
+				return i;
+		}
+		return -1;
+	}
+	
+	public String checkDepotName(String depotEntered)
+	{
+		for (int i = 0; i <= depotCount; i++)
+		{
+			if (d[i] != null && depotEntered.equalsIgnoreCase(d[i].getName()))
+				return d[i].getName();
+		}
+		return null;
+	}
+	
 		
 	/*/**************************************************************************************************************************************************************
 	 * Remove Depot
@@ -169,43 +165,34 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void removeDepot()
 	{
-    	String removeDepot = null;																											// Initialise variable for depot name input
-    	
-    	if (depot1 != null || depot2 != null)																								// Check if either depot 1 or depot 2 exist
-    	{
-    		availableDepots();																												// Call to method to display available depots
-			System.out.print("Please enter name of depot to remove: ");																		// Request name of depot to be removed
-			removeDepot = console.nextLine();																								// Read depot name entered from console
+		if (depotCount > 0)
+		{
+			String depotEntered = null;
+			System.out.print("Please enter name for depot to be removed: ");
+			depotEntered = console.nextLine();
 			System.out.print("\n");
-			if (depot1 != null && removeDepot != null && removeDepot.length() > 0 && removeDepot.equalsIgnoreCase(depot1.getName()))		// Check if depot 1 exists and name entered matches depot 1
-	    	{
-	    		System.out.println("Depot "+depot1.getName()+" has been removed.\n");														// Inform user depot 1 has been removed
-	    		for (int i = 1; i <=3; i++)
-	    		{
-	    			depot1.clearProduct(i);
-	    		}
-	    		depot1.clearName();
-	    		depot1 = null;																												// Set depot 1 to null
-	    	}
-		    else if (depot2 != null && removeDepot != null && removeDepot.length() > 0 && removeDepot.equalsIgnoreCase(depot2.getName()))	// Check if depot 2 exists and name entered matches depot 2
-		    {
-	    		System.out.println("Depot "+depot2.getName()+" has been removed.\n");														// Inform user depot 2 has been removed
-	    		for (int i = 1; i <=3; i++)
-	    		{
-	    			depot2.clearProduct(i);
-	    		}
-	    		depot2 = null;																												// Set depot 2 to null
-	    	}
-		    else if (removeDepot !=null && removeDepot.length() == 0)																		// If nothing was entered
-				System.out.println("Nothing entered. Depot has not been removed.\n");														// Inform user nothing was entered
-		    else if (removeDepot != null && removeDepot.length() > 0)																		// If name entered does not match any existing depots
-    			System.out.print("Depot with that name does not exist. Depot has not been removed.\n");										// Inform user depot has not been removed	
-    	}
-	    else
-	    	System.out.println("No depots exist.\n");																						// Else if no depots exist, inform user
-    	enterContinue();																													// Call method to request user to press enter to continue
-    }
-		
+			
+			
+			if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) != null)
+			{
+				for (int i = checkDepotPosition(depotEntered); i < depotCount-1; i++)
+				{
+					d[i] = d[i+1];
+				}
+				System.out.println("Depot "+depotEntered+" has been successfully removed\n"); 				// Inform the user that depot was successfully removed
+				d[depotCount] = null;
+				depotCount--;
+			}
+			else if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) == null)
+				System.out.println("Depot with that name does not exist. Depot has not been removed\n");								// Inform user nothing was entered and a depot has not been removed
+			else if (depotEntered != null && depotEntered.length() == 0)
+				System.out.println("Nothing entered. Depot has not been removed\n");								// Inform user nothing was entered and a depot has not been removed
+		}
+		else
+			System.out.println("No depots exist");
+		enterContinue();		
+	}
+	
 	/*/**************************************************************************************************************************************************************
 	 * Request list of depots
 	 * 
@@ -213,15 +200,17 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void listDepot()
 	{
-		if (depot1 == null && depot2 == null)																								// If no depots exist
-    		System.out.println("No depots\n");																								// Inform user no depots exist
-    	else if (depot1 != null && depot2 == null)																							// If depot 1 exists but depot 2 doesn't
-    		System.out.println("Depot 1: "+depot1.getName()+" has "+depot1.getProduct()+" products\n");										// Print depot 1 info
-    	else if (depot1 == null && depot2 != null)																							// If depot 2 exists but depot 1 doesn't
-    		System.out.println("Depot 2: "+depot2.getName()+" has "+depot2.getProduct()+" products\n");										// Print depot 2 info
-    	else if (depot1 != null && depot2 != null) 																							// If both depots exist
-    		System.out.println("Depot 1: "+depot1.getName()+" has "+depot1.getProduct()+" products\nDepot 2: "+depot2.getName()+" has "+depot2.getProduct()+" products\n"); // Print depot 1 and depot 2 info
-		enterContinue();																													// Call method to request user to press enter to continue
+		if (depotCount > 0)
+		{
+			for (int i = 0; i < depotCount; i++)
+			{																															
+				System.out.println("Depot "+d[i].getName()+" has "+d[i].getProduct()+" products");										// Print depot 1 info
+			}
+		}
+		else
+			System.out.println("No depots exist");
+		System.out.println();
+		enterContinue();
 	}
 		
 	/*/**************************************************************************************************************************************************************
@@ -230,101 +219,6 @@ public class Interface
 	 * A check is performed to see if any depots exist
 	 * 
 	 * A product name is requested from the user
-	 * 
-	 * If a product with the same name already exists in any
-	 * available depots, the user is informed of the product info and
-	 * which depot the product is stored in, the method
-	 * 'addExistToDepot()' is called and the product name,
-	 * depotName the product is stored in and the product number are
-	 * passed as arguments to the method.
-	 * 
-	 * If a product with the same name does not exist in any available
-	 * depots, the method 'addNewtoDepot' is called and productName
-	 * is passed as an argument.
-	 ****************************************************************************************************************************************************************/
-	public void addProduct()
-	{
-		String productName;																						// Initialise variable for product name input
-		if (depot1 != null || depot2 != null)																	// If depot 1 or depot 2 exists
-		{
-			System.out.print("Please enter name of product to add: ");											// Request user to input product name to be added
-			productName = console.nextLine();																	// Read product name input from console
-			System.out.print("\n");
-			if (productName !=null && productName.length() > 0)													// Check if something was entered
-			{
-				if (depot1 != null && depot2 == null)															// If depot 1 exists but depot 2 doesn't
-		        {
-					for (int i = 1; i <= 4 ; i++)																// Loop to compare name of each product in depot 1 to name entered
-		            {
-		                if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)))                   // If there is a match, meaning a product with the same name has been found in depot 1
-		                {
-		                	System.out.println("Product "+productName+" with price $"+String.format("%.2f", depot1.getProductPrice(i))+" and weight "+depot1.getProductWeight(i)+"kg exists in 1 depot "+depot1.getName()+".\n"); // Print product info
-		                	addExistToDepot(productName, depot1.getName(), i);									// Call method to add an existing product, passing product name and product number
-		                	break;																				// Exit loop
-		                }
-		             
-		                else if (i == 4)																		// If no product with same name exists in depot 1
-		                	addNewToDepot(productName);															// Call method to add new product, passing product name
-		            }
-		        }
-		        else if (depot1 == null && depot2 != null)														// If depot 2 exists but depot 1 doesn't
-		        {
-		            for (int i = 1; i <= 4; i++)																// Loop to compare name of each product in depot 1 to name entered
-		            {
-		                if (i <=3 && productName.equalsIgnoreCase(depot2.getProductName(i)))					// If there is a match, meaning a product with the same name has been found in depot 2
-		                {
-		                	System.out.println("Product "+productName+" with price $"+String.format("%.2f", depot1.getProductPrice(i))+" and weight "+depot1.getProductWeight(i)+"kg exists in 1 depot "+depot1.getName()+".\n"); // Print product info
-		                	addExistToDepot(productName, depot1.getName(), i);													// Call method to add an existing product, passing product name and product number
-		                	break;																				// Exit loop
-		                }
-		                else if (i == 4)																		// If no product with same name exists in depot 2
-		                {
-		                	addNewToDepot(productName);															// Call method to add a new product, passing product name
-		                }
-		            }
-		        }
-		        else if (depot1 != null && depot2 != null)														// If both depot 1 and depot 2 exist
-		        {
-		            for (int i = 1; i <= 4; i++)																// Loop to compare name of each product in depot 1 and 2
-		            {
-		            	if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)) && !productName.equalsIgnoreCase(depot2.getProductName(i))) // If product exists in depot 1 but not depot 2
-		            	{
-		            		System.out.println("Product "+productName+" with price $"+String.format("%.2f", depot1.getProductPrice(i))+" and weight "+depot1.getProductWeight(i)+"kg exists in 1 depot "+depot1.getName()+".\n"); // Print product info
-		            		addExistToDepot(productName, depot1.getName(), i);													// Call method to add an existing product, passing product name and product number
-		            		break;																				// Exit loop
-		            	}
-		            	else if (i <= 3 && !productName.equalsIgnoreCase(depot1.getProductName(i)) && productName.equalsIgnoreCase(depot2.getProductName(i))) // If product exists in depot 2 but not depot 1
-		            	{
-		            		System.out.println("Product "+productName+" with price $"+String.format("%.2f", depot2.getProductPrice(i))+" and weight "+depot2.getProductWeight(i)+"kg exists in 1 depot "+depot2.getName()+".\n"); // Print product info
-		            		addExistToDepot(productName, depot2.getName(), i);													// Call method to add an existing product, passing product name and product number
-		            		break;																				// Exit loop
-		            	}
-		            	else if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)) && productName.equalsIgnoreCase(depot2.getProductName(i))) // If product exists in both depots
-		            	{
-		            		System.out.println("Product "+productName+" with price $"+String.format("%.2f", depot1.getProductPrice(i))+" and weight "+depot1.getProductWeight(i)+"kg exists in 2 depots "+depot1.getName()+" and "+depot2.getName()+".\n"); // Print product info
-		            		addExistToDepot(productName, depot1.getName(), i);													// Call method to add an existing product, passing product name and product number
-		            		break;																				// Exit loop
-		            	}
-		            	else if (i == 4)																		// If product does not exist in either depot
-		            		addNewToDepot(productName);															// Call method to add a new product, passing product name
-		            }
-		        }
-			}
-			else if (productName !=null && productName.length() == 0)											// If nothing was entered
-			{
-				System.out.println("Nothing entered. Product has not been added.\n");							// Inform user nothing was entered and product has not been added
-				enterContinue();																				// Call method to request user to press enter to continue
-			}
-		}
-		else
-		{
-			System.out.println("No depots exist\n");															// If no depots exist, inform user
-			enterContinue();																					// Call method to request user to press enter to continue
-		}
-	}
-	
-	/*/****************************************************************
-	 * Add an existing product to a depot
 	 * 
 	 * If a product with the same name exists in any depot, the user is
 	 * asked which depot they would like to store the product in.
@@ -336,101 +230,81 @@ public class Interface
 	 * is asked to input a quantity, a new product is then made in the
 	 * depot and name, price and weight are copied from the existing
 	 * product in the other depot.
-	 ******************************************************************/
-	public void addExistToDepot(String productName, String depotStored, int i)
-	{
-		String depotName = null;																				// Initialise variable for depot name input
-    	availableDepots();																						// Display available depots to add to
-		System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
-		depotName = console.nextLine();																			// Read depot name from console
-		System.out.print("\n");
-		if (depotName != null && depotName.length() > 0)
-		{
-			if (depot1 != null && depotName.equalsIgnoreCase(depot1.getName()))										// If depot 1 exists and depot name entered matches name of depot 1
-			{
-				if (depotName.equalsIgnoreCase(depotStored))
-				{
-					System.out.println("Current quantity of "+depot1.getProductName(i)+" in depot "+depot1.getName()+": "+depot1.getProductQuantity(i)+"\n");	// Print product info with current quantity
-					depot1.setProductQuantity(depot1.getProductQuantity(i)+addQuantity(), i);																// Call the addQuantity() method to add to existing product
-					System.out.println("New quantity of "+depot1.getProductName(i)+" in depot "+depot1.getName()+": "+depot1.getProductQuantity(i)+"\n");		// Print product info with new quantity
-				}
-				else
-				{
-					depot1.setProduct(depot2.getProductName(i), addQuantity(), depot2.getProductWeight(i), depot2.getProductPrice(i));
-					System.out.println("Product successfully added to depot "+depot1.getName()+"\n");				// Inform user product has been successfully added	
-				}
-			}
-			else if (depot2 != null && depotName.equalsIgnoreCase(depot2.getName()))								// If depot 2 exists and depot name entered matches name of depot 2
-			{
-				if (depotName.equalsIgnoreCase(depotStored))
-				{
-					System.out.println("Current quantity of "+depot2.getProductName(i)+" in depot "+depot2.getName()+": "+depot2.getProductQuantity(i)+"\n");	//Print the product info with current quantity	
-					depot2.setProductQuantity(depot2.getProductQuantity(i)+addQuantity(), i);																// Call the addQuantity() method to add to existing product
-					System.out.println("New quantity of "+depot2.getProductName(i)+" in depot "+depot2.getName()+": "+depot2.getProductQuantity(i)+"\n");
-				}
-				else
-				{
-					depot2.setProduct(depot1.getProductName(i), addQuantity(), depot1.getProductWeight(i), depot1.getProductPrice(i));
-					System.out.println("Product successfully added to depot "+depot2.getName()+"\n");				// Inform user product has been successfully added	
-				}
-			}
-			else																									// If name entered does not match an existing depot
-				System.out.println("Depot with that name does not exist. Product has not been added.\n");			// Inform user depot with that name does not exist and product has not been added
-		}
-		else if (depotName != null && depotName.length() == 0)
-			System.out.println("Nothing entered. Product has not been added.\n");									// If nothing was entered, inform user
-		enterContinue();																							// Call method to request user to press enter to continue
-	}
-	
-	/*/****************************************************************
-	 * Add a new product to a depot
 	 * 
 	 * If a product does not exist in either depot, a new product is
 	 * created in that depot and the user is requested to input
 	 * quantity, weight and price.
 	 * 
-	 * If the depot holds 3 products, no more products can be added.
-	 ******************************************************************/
-	public void addNewToDepot(String productName)
+	 * If the depot holds 5 products, no more products can be added.
+	 ****************************************************************************************************************************************************************/
+	public void addProduct()
 	{
-		String depotName = null;																				// Initialise variable for depot name
-    	availableDepots();																						// Display available depots to add to
-		System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
-		depotName = console.nextLine();																			// Read depot name from console
-		System.out.print("\n");
-		if (depotName != null && depotName.length() > 0)														// Check if something was entered
+		String productEntered = null;																						// Initialise variable for product name input
+		String depotEntered = null;
+		int productLocation = -1;
+		if (depotCount > 0)
 		{
-			if (depot1 != null && depotName.equalsIgnoreCase(depot1.getName()))										// If depot 1 exists and depot name entered matches name of depot 1
+			System.out.print("Please enter name of product to add: ");											// Request user to input product name to be added
+			productEntered = console.nextLine();																	// Read product name input from console
+			System.out.print("\n");
+			if (productEntered != null && productEntered.length() > 0 && checkProductInDepot(productEntered) > 0)
 			{
-				if (depot1.getProduct() < 3)																		// Check if depot 1 doesn't have the max amount of products allowed (3)
-				{
-					depot1.setProduct(productName, addQuantity(), productWeight(), productPrice());					// Add product to depot 1
-					System.out.println("Product successfully added to depot "+depot1.getName()+"\n");				// Inform user product has been successfully added
-				}
-				else if (depot1.getProduct() == 3)																	// If the depot has reached the maximum number of allowed products (3)
-				{
-					System.out.println("Depot "+depot1.getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
-				}
+				System.out.println("Product with that name already exists in "+checkProductInDepot(productEntered)+" depots.\n");
 			}
-			else if (depot2 != null && depotName.equalsIgnoreCase(depot2.getName()))								// If depot 2 exists and depot name entered matches name of depot 2
+			availableDepots();																						// Display available depots to add to
+			System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
+			depotEntered = console.nextLine();																			// Read depot name from console
+			System.out.print("\n");
+			if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) != null)
 			{
-				if (depot2.getProduct() < 3)																		// Check if depot 1 doesn't have the max amount of products allowed (3)
+				int i = checkDepotPosition(depotEntered);
+				for (int j = 0; j < d[i].getProduct(); j++)
 				{
-					depot2.setProduct(productName, addQuantity(), productWeight(), productPrice());					// Add product to depot 2
-					System.out.println("Product successfully added to depot "+depot2.getName()+"\n");				// Inform user product has been successfully added
+					if (d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						productLocation = j;
 				}
-				else if (depot2.getProduct() == 3)																	// If the depot has reached the maximum number of allowed products (3)
+				if (productLocation >= 0)
 				{
-					System.out.println("Depot "+depot2.getName()+" is full. Please remove a product to add another product.\n"); // Inform user depot is full
+					System.out.println("Current quantity of "+d[i].getProductName(productLocation)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productLocation)+"\n");	// Print product info with current quantity
+					d[i].setProductQuantity(d[i].getProductQuantity(productLocation)+addQuantity(), productLocation);
+					System.out.println("New quantity of "+d[i].getProductName(productLocation)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productLocation)+"\n");		// Print product info with new quantity
 				}
+				else if (d[i].getProduct() < 5)
+				{
+					d[i].setProduct(productEntered, addQuantity(), productWeight(), productPrice());
+					System.out.println("Product successfully added to depot "+d[i].getName()+"\n");				// Inform user product has been successfully added
+				}
+				else
+					System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
 			}
-			else
-				System.out.println("Depot with that name does not exist. Product has not been added.\n");			// If depot name entered does not match any existing depots, inform user
+			else if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) == null)
+				System.out.print("A depot with that name does not exist. No product has been added.");
+			else if (depotEntered != null && depotEntered.length() == 0)
+				System.out.print("Nothing entered. Nothing has been added");	
 		}
-		else if (depotName != null && depotName.length() == 0)
-			System.out.println("Nothing entered. Product has not been added.\n");									// If nothing was entered, inform user
-		enterContinue();																							// Call method to request user to press enter to continue
+		else
+			System.out.println("No depots exist");
+		System.out.println();
+		enterContinue();
 	}
+	
+	public int checkProductInDepot(String productEntered)
+	{
+		int location = 0;
+		if (depotCount > 0)
+		{
+			for (int i = 0; i < depotCount; i++)
+			{
+				for (int j = 0, k = 0; j < d[i].getProduct(); j++)
+				{
+					if (d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						location++;
+				}
+			}
+		}
+		return location;
+	}
+	
 	
 	/*/**************************************************************************************************************************************************************
 	 * Remove a product
@@ -448,89 +322,25 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void removeProduct()
 	{
-		String productName;																						// Initialise variable for product name input
-		if (depot1 != null || depot2 != null)																	// Check if either depot 1 or depot 2 exist
+		String productEntered = null;																						// Initialise variable for product name input
+		String depotEntered = null;
+		int productLocation = -1;
+		if (depotCount > 0)																	// Check if either depot 1 or depot 2 exist
 		{
-			System.out.print("Please enter name of product to remove: ");										// Request user to input product name to be added
-			productName = console.nextLine();																	// Read product name input from console
+			System.out.print("Please enter name of product to remove: ");											// Request user to input product name to be added
+			productEntered = console.nextLine();																	// Read product name input from console
+			System.out.print("\n");
+			if (productEntered != null && productEntered.length() > 0 && checkProductInDepot(productEntered) == 0)
+			{
+				System.out.println("Product with that name does not exist. Nothing has been removed\n");
+			}
+			else if (productEntered != null && productEntered.length() > 0 && checkProductInDepot(productEntered) > 0)
+				
+			availableDepots();																						// Display available depots to add to
+			System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
+			depotEntered = console.nextLine();																			// Read depot name from console
 			System.out.print("\n");
 			
-			if (productName !=null && productName.length() > 0)													// Check if something was entered
-			{
-				if (depot1 != null && depot2 == null)															// If depot 1 exists but depot 2 doesn't
-		        {
-					for (int i = 1; i <= 4 ; i++)																// Loop to compare name of each product in depot 1 to name entered
-		            {
-		                if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)))					// If there is a match, meaning a product with the same name has been found in depot 1
-		                {
-		                	System.out.println("Product "+productName+" exists in depot "+depot1.getName()+"\n");	// Inform user a product with that name exists in depot 1
-		                	System.out.println("Available depots:\n"+depot1.getName()+"\n");					// Print the available depot that the product can be removed from
-		                	removeFromDepot(productName, depot1.getName(), i);									// Call method to remove product from depot, passing product name, depot name and product number
-		                	break;																				// Exit loop
-		                }
-		            	else if (i == 4)																		// If product does not exist in depot 1
-		            	{
-							System.out.println("Product "+productName+" does not exist. Product has not been removed.\n");	// Inform user product does not exist and has not been removed
-							enterContinue();																	// Call method to request user to press enter to continue
-		            	}
-		            }
-		        }
-		        else if (depot1 == null && depot2 != null)														// If depot 2 exists but depot 1 doesn't
-		        {
-		            for (int i = 1; i <= 4; i++)																// Loop to compare name of each product in depot 2 to name entered
-		            {
-		                if (i <= 3 && productName.equalsIgnoreCase(depot2.getProductName(i)))					// If there is a match, meaning a product with the same name has been found in depot 2
-		                {
-		                	System.out.println("Product "+productName+" exists in depot "+depot2.getName()+"\n");	// Inform user a product with that name exists in depot 2
-		                	System.out.println("Available depots:\n"+depot2.getName()+"\n");					// Print the available depot that the product can be removed from
-		                	removeFromDepot(productName, depot2.getName(), i);									// Call method to remove product from depot, passing product name, depot name and product number
-		                	break;																				// Exit loop
-		                }
-		            	else if (i == 4)																		// If product does not exist in depot 2
-		            	{
-		            		System.out.println("Product "+productName+" does not exist. Product has not been removed.\n");	// Inform user product does not exist and has not been removed
-		            		enterContinue();																						// Call method to request user to press enter to continue
-		            	}
-		            }
-		        }
-		        else if (depot1 != null && depot2 != null)														// If both depot 1 and depot 2 exist
-		        {
-		            for (int i = 1; i <= 4; i++)																// Loop to compare name of each product in depot 1 and depot 2 to name entered
-		            {
-		            	if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)) && !productName.equalsIgnoreCase(depot2.getProductName(i))) // if product exists in depot 1 but not depot 2
-		            	{
-		            		System.out.println("Product "+productName+" exists in depot "+depot1.getName()+"\n");	// Inform user a product with that name exists in depot 1
-		                	System.out.println("Available depots:\n"+depot1.getName()+"\n");					// Print the available depot(s) that the product can be removed from
-		                	removeFromDepot(productName, depot1.getName(), i);									// Call method to remove product from depot, passing product name, depot name and product number
-		                	break;																				// Exit loop
-		            	}
-		            	else if (i <= 3 && !productName.equalsIgnoreCase(depot1.getProductName(i)) && productName.equalsIgnoreCase(depot2.getProductName(i))) // if product exists in depot 2 but not depot 1
-		            	{
-		            		System.out.println("Product "+productName+" exists in depot "+depot2.getName()+"\n");	// Inform user a product with that name exists in depot 2
-		                	System.out.println("Available depots:\n"+depot2.getName()+"\n");					// Print the available depot(s) that the product can be removed from
-		                	removeFromDepot(productName, depot2.getName(), i);									// Call method to remove product from depot, passing product name, depot name and product number
-		                	break;
-		            	}
-		            	else if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)) && productName.equalsIgnoreCase(depot2.getProductName(i))) // if product exists in both depots
-		            	{
-		            		System.out.println("Product "+productName+" exists in 2 depots: "+depot1.getName()+" and "+depot2.getName()+"\n");	// Inform user a product with that name exists in both depots
-		            		System.out.println("Available depots:\n"+depot1.getName()+"\n"+depot2.getName()+"\n");	// Print the available depot(s) that the product can be removed from
-		            		removeFromDepot(productName, "both", i);												// Call method to remove product from depot, passing product name, depot name and product number
-		            		break;
-		            	}
-		            	else if (i == 4)																		// If product does not exist in either depot
-		            	{
-							System.out.println("Product "+productName+" does not exist. Product has not been removed.\n");	// Inform user product does not exist and has not been removed
-							enterContinue();																	// Call method to request user to press enter to continue
-		            	}
-		            }
-		        }
-			}
-			else if (productName !=null && productName.length() == 0)											// If no product name was entered
-			{
-				System.out.println("Nothing entered. Product has not been removed.\n");							// Inform user nothing was entered and product has not been removed
-				enterContinue();																				// Call method to request user to press enter to continue
-			}
 		}
 		else
 		{
@@ -647,56 +457,17 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void listProduct()
 	{
-		String productName = null, depotName = null;															// Initialise variables for product name and depot name input
-		if (depot1 != null || depot2 != null)																	// Check if either depot 1 or depot 2 exist
+		String productEntered = null, depotEntered = null;															// Initialise variables for product name and depot name input
+		if (depotCount > 0)																	// Check if either depot 1 or depot 2 exist
 		{
 			availableDepots();																					// Call method to display available depots
 			System.out.print("Please enter name of a depot: ");													// Request user to input name of depot
-			depotName = console.nextLine();																		// Read depot name input from console
+			depotEntered = console.nextLine();																		// Read depot name input from console
 			System.out.print("\n");
-			if (depotName !=null && depotName.length() > 0)														// Check if something was entered
+			if (depotEntered !=null && depotEntered.length() > 0 && )														// Check if something was entered
 			{
-				if (depot1 != null && depotName.equalsIgnoreCase(depot1.getName()))								// If depot 1 exists and name matches depot 1
-				{
-					if (depot1.getProduct() > 0)																// Check if depot 1 contains any products
-					{
-						for(int i = 1; i <= 3; i++)																// Loop to check name of each product in depot 1
-						{
-							productName = depot1.getProductName(i);												// Read product name from product in depot 2
-							if (productName != null)															// If product name is not null (empty)
-							{
-								System.out.println("Product "+depot1.getProductName(i)+" has price: $"+String.format("%.2f", depot1.getProductPrice(i))+", weight: "+depot1.getProductWeight(i)+"kg, and quantity: "+depot1.getProductQuantity(i)); // Print product info
-							}
-							
-						}
-					}
-					else																						// Else if no products exist in depot 1
-						System.out.println("No products exist in depot " +depot1.getName()+"\n");				// Inform user no products exist in depot 1
-				}
 				
-				else if (depot2 != null && depotName.equalsIgnoreCase(depot2.getName()))						// If depot 2 exists and name matches depot 2
-				{
-					if(depot2.getProduct() > 0)																	// Check if depot 2 contains any products
-					{
-						for(int i = 1; i <= 3; i++)																// Loop to check name of each product in depot 2
-						{
-							productName = depot2.getProductName(i);												// Read product name from product in depot 2
-							if (productName != null)															// If product name is not null (empty)
-							{
-								System.out.println("Product "+depot2.getProductName(i)+" has price: $"+String.format("%.2f", depot2.getProductPrice(i))+", weight: "+depot2.getProductWeight(i)+"kg, and quantity: "+depot2.getProductQuantity(i)); // Print product info
-							}
-							
-						}
-					}
-					else																						// Else if no products exist in depot 2
-						System.out.println("No products exist in depot " +depot2.getName()+"\n");				// Inform user no products exist in depot 2
-				}
-				else
-					System.out.println("Depot with that name does not exist.\n");								// If name entered does not match an existing depot, inform user
 			}
-			else
-				System.out.println("Nothing entered.\n");														// If nothing was entered, inform user
-		}
 		else
 		{
 			System.out.println("No depots exist\n");															// If no depots exist, inform user
@@ -716,70 +487,27 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void locateProduct()
 	{
-		if (depot1 != null || depot2 != null)																	// Check if either depot 1 or depot 2 exists
+		if (depotCount > 0)																	// Check if either depot 1 or depot 2 exists
 		{
-			String productName = null;																			// Initialise variable for product name input
+			String productEntered = null;																			// Initialise variable for product name input
 			System.out.print("Please enter name of product to locate: ");										// Request user to input name of product to locate
-			productName = console.nextLine();																	// Read product name from console
+			productEntered = console.nextLine();																	// Read product name from console
 			System.out.print("\n");
-			if (productName !=null && productName.length() > 0)													// Check if something was entered
+			if (productEntered !=null && productEntered.length() > 0)													// Check if something was entered
 			{
-				if (depot1 != null && depot2 == null)															// If depot 1 exists but depot 2 doesn't
-		        {
-		            for (int i = 1; i <= 4; i++)																// Loop to check name of each product in depot
-		            {
-		                if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)))					// If product name entered matches name of a product in depot
-		                {
-		                	System.out.println("Product "+depot1.getProductName(i)+" is in depot "+depot1.getName()+" with quantity "+depot1.getProductQuantity(i)+"\n"); // Inform user product name, quantity and location
-		                	break;
-		                }
-		                else if (i == 4)																		// If product name entered does not match name of a product in depot
-		                	System.out.println("Product "+productName+" does not exist in depot "+depot1.getName()+"\n"); // Inform user product does not exist in depot
-		            }
-		        }
-		        else if (depot1 == null && depot2 != null)														// If depot 2 exists but depot 1 doesn't
-		        {
-		            for (int i = 1; i <= 4; i++)																// Loop to check name of each product in depot
-		            {
-		                if (i <= 3 && productName.equalsIgnoreCase(depot2.getProductName(i)))					// If product name entered matches name of a product in depot
-		                {
-		                	System.out.println("Product "+depot2.getProductName(i)+" is in depot "+depot2.getName()+" with quantity "+depot2.getProductQuantity(i)+"\n"); // Inform user product name, quantity and location
-		                	break;
-		                }
-		                else if (i == 4)																		// If product name entered does not match name of a product in depot
-		                	System.out.println("Product "+productName+" does not exist in depot "+depot2.getName()+"\n");	// Inform user product does not exist in depot
-		            }
-		        }
-		        else if (depot1 != null && depot2 != null)														// If both depot 1 and depot 2 exist
-		        {
-		        	int j = 0;
-		            for (int i = 1; i <= 4; i++)																// Loop to check name of each product in both depots
-		            {
-		                if (i <= 3 && productName.equalsIgnoreCase(depot1.getProductName(i)))					// If product name entered matches name of a product in depot
-		                {
-		                	System.out.println("Product "+depot1.getProductName(i)+" is in depot "+depot1.getName()+" with quantity "+depot1.getProductQuantity(i)+"\n");	// Inform user product name, quantity and location
-		                	j = 1;
-		                }
-		                else if (i == 4 && j == 0)																		// If product name entered does not match name of a product in depot
-		                	System.out.println("Product "+productName+" does not exist in depot "+depot1.getName()+"\n"); // Inform user product does not exist in depot
-
-		                if (i <= 3 && productName.equalsIgnoreCase(depot2.getProductName(i)))					// If product name entered matches name of a product in depot
-		                {
-		                	System.out.println("Product "+depot2.getProductName(i)+" is in depot "+depot2.getName()+" with quantity "+depot2.getProductQuantity(i)+"\n");	// Inform user product name, quantity and location
-		                	j = 1;
-		                }
-		                else if (i == 4 && j == 0) 																// If product name entered matches name of a product in depo
-		                	System.out.println("Product "+productName+" does not exist in depot "+depot2.getName()+"\n"); // Inform user product name, quantity and location
-		            }
+				for (int i = 0; i < depotCount; i++)
+				{
+					for (int j = 0; j < d[i].getProduct(); j++)
+					{
+						if (d[i].getProductName(j).equalsIgnoreCase(productEntered))
+							System.out.println("Product "+d[i].getProductName(j)+" is in depot "+d[i].getName()+" with quantity "+d[i].getProductQuantity(j)+"\n");
+					}
 				}
 			}
-			else																								// If nothing was entered, inform user
-				System.out.println("Nothing entered.\n");
-		}
-		
 		else																									// If no depots exist, inform user
 			System.out.println("No depots exist\n");
 		enterContinue();																						// Call method to request user to press enter to continue
+		}
 	}
 		
 	/*/**************************************************************************************************************************************************************
@@ -949,11 +677,14 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void availableDepots()
 	{
-		if (depot1 != null && depot2 == null)																	// If depot 1 exists but depot 2 doesn't
-			System.out.println("Available depots:\n"+depot1.getName()+"\n");									// Print depot 1
-		else if (depot1 == null && depot2 != null)																// If depot 2 exists but depot 1 doesn't
-			System.out.println("Available depots:\n"+depot2.getName()+"\n");									// Print depot 2
-		else if (depot1 != null && depot2 != null)																// If both depots exist
-			System.out.println("Available depots:\n"+depot1.getName()+"\n"+depot2.getName()+"\n");				// Print both depots
+		if (depotCount != 0)
+		{
+			System.out.println("Available depots:");
+			for (int i = 0; i < depotCount; i++)
+			{																															
+				System.out.println(d[i].getName());
+			}
+			System.out.println();
+		}
 	}
 }
