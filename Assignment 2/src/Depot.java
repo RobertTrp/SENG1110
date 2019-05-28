@@ -12,7 +12,7 @@ public class Depot
 {
 	private String name;
 	private Product[] p = new Product[5];
-	private static int productCount = 0;
+	private int productCount = 0;
 	
 	
 	/*/************************************************************************************************************************************************************************
@@ -65,6 +65,11 @@ public class Depot
 		return productCount;
 	}
 	
+	public void removeProduct()
+	{
+		
+	}
+	
 	
 	
 	public int checkProductPosition(String nameEntered)
@@ -102,7 +107,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public double getProductWeight(int productNumber)
 	{
-		if (productNumber < productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0 && p[productNumber] != null)
 			return p[productNumber].getWeight();
 		return 0;
 	}
@@ -112,7 +117,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public int getProductQuantity(int productNumber)
 	{
-		if (productNumber < productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0 && p[productNumber] != null)
 			return p[productNumber].getQuantity();
 		return 0;
 	}
@@ -122,7 +127,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public double getProductPrice(int productNumber)
 	{
-		if (productNumber < productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0 && p[productNumber] != null)
 			return p[productNumber].getPrice();
 		return 0;
 	}
@@ -134,7 +139,7 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void setProductQuantity(int newQuantity, int productNumber)
 	{
-		if (productNumber < productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0 && p[productNumber] != null)
 			p[productNumber].setQuantity(newQuantity);
 	}
 
@@ -143,15 +148,13 @@ public class Depot
 	 **************************************************************************************************************************************************************************/
 	public void clearProduct(int productNumber)
 	{
-		if (productNumber < productCount && productNumber >= 0)
+		if (productNumber < productCount && productNumber >= 0 && p[productNumber] != null)
 		{
 			for (int i = productNumber; i < productCount-1; i++)
 			{
-				System.out.print(i);
 				p[i] = p[i+1];
 			}
-			p[productCount].clear();
-			p[productCount] = null;
+			p[productCount-1] = null;
 			productCount--;
 		}
 	}

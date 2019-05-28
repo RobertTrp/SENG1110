@@ -14,7 +14,7 @@ public class Interface
 {
 	private static Scanner console = new Scanner(System.in);
 	private Depot[] d = new Depot[4];
-	private static int depotCount = 0;
+	private int depotCount = 0;
 	
 	public static void main(String[] args)
 	{
@@ -109,7 +109,7 @@ public class Interface
 			System.out.print("Please enter name for depot to be added: ");
 			depotEntered = console.nextLine();
 			System.out.print("\n");
-			while (checkDepotPosition(depotEntered) >= 0)
+			while (getDepotIndex(depotEntered) >= 0)
 			{
 				System.out.print("Name already exists. Please enter a different name: ");					// Request the user to input a different depot name
 				depotEntered = console.nextLine();																// Read depot name entered from console
@@ -130,7 +130,7 @@ public class Interface
 		enterContinue();
 	}
 	
-	public int checkDepotPosition(String depotEntered)
+	public int getDepotIndex(String depotEntered)
 	{
 		for (int i = 0; i <= depotCount; i++)
 		{
@@ -138,16 +138,6 @@ public class Interface
 				return i;
 		}
 		return -1;
-	}
-	
-	public String checkDepotName(String depotEntered)
-	{
-		for (int i = 0; i <= depotCount; i++)
-		{
-			if (d[i] != null && depotEntered.equalsIgnoreCase(d[i].getName()))
-				return d[i].getName();
-		}
-		return null;
 	}
 	
 		
@@ -168,22 +158,23 @@ public class Interface
 		if (depotCount > 0)
 		{
 			String depotEntered = null;
+			availableDepots();
 			System.out.print("Please enter name for depot to be removed: ");
 			depotEntered = console.nextLine();
 			System.out.print("\n");
 			
 			
-			if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) != null)
+			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
 			{
-				for (int i = checkDepotPosition(depotEntered); i < depotCount-1; i++)
+				for (int i = getDepotIndex(depotEntered); i < depotCount-1; i++)
 				{
 					d[i] = d[i+1];
 				}
 				System.out.println("Depot "+depotEntered+" has been successfully removed\n"); 				// Inform the user that depot was successfully removed
-				d[depotCount] = null;
+				d[depotCount-1] = null;
 				depotCount--;
 			}
-			else if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) == null)
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
 				System.out.println("Depot with that name does not exist. Depot has not been removed\n");								// Inform user nothing was entered and a depot has not been removed
 			else if (depotEntered != null && depotEntered.length() == 0)
 				System.out.println("Nothing entered. Depot has not been removed\n");								// Inform user nothing was entered and a depot has not been removed
@@ -255,8 +246,8 @@ public class Interface
 			System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
 			depotEntered = console.nextLine();																			// Read depot name from console
 			System.out.print("\n");
-			int i = checkDepotPosition(depotEntered);
-			if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) != null)
+			int i = getDepotIndex(depotEntered);
+			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
 			{
 				int productIndex = -1;
 				for (int j = 0; j < d[i].getProduct(); j++)
@@ -288,7 +279,7 @@ public class Interface
 				else
 					System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
 			}
-			else if (depotEntered != null && depotEntered.length() > 0 && checkDepotName(depotEntered) == null)
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
 				System.out.print("A depot with that name does not exist. No product has been added.");
 			else if (depotEntered != null && depotEntered.length() == 0)
 				System.out.print("Nothing entered. Nothing has been added");	
@@ -339,29 +330,84 @@ public class Interface
 	{
 		String productEntered = null;																						// Initialise variable for product name input
 		String depotEntered = null;
+		int removeQuantity = 0;
 		if (depotCount > 0)																	// Check if either depot 1 or depot 2 exist
 		{
 			System.out.print("Please enter name of product to remove: ");											// Request user to input product name to be added
 			productEntered = console.nextLine();																	// Read product name input from console
 			System.out.print("\n");
 			int[] productLocation = checkProductInDepot(productEntered);
-			if (productEntered != null && productEntered.length() > 0 && productLocation[2] == 0)
-			{
-				System.out.println("Product with that name does not exist. Nothing has been removed\n");
+			if (productEntered != null && productEntered.length() > 0 && productLocation[2] > 0)
+			{			
+				System.out.println("Product "+d[productLocation[0]].getProductName(productLocation[1])+" exists in the following depots:");				// Display available depots to add to
+				for (int i = 0; i < depotCount; i++)
+				{
+					for (int j = 0; j < d[i].getProduct(); j++)
+					{
+						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						{
+							System.out.println(d[i].getName()+" with quantity "+d[i].getProductQuantity(j));
+						}
+					}
+				}
+				System.out.println();
+				System.out.print("Please enter depot name for product to be removed from: ");									// Request input for depot name
+				depotEntered = console.nextLine();																			// Read depot name from console
+				System.out.print("\n");
+				int i = getDepotIndex(depotEntered);
+				if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
+				{
+					int productIndex = -1;
+					for (int j = 0; j < d[i].getProduct(); j++)
+					{
+						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						{
+							productIndex = j;
+						}
+					}
+					if (productIndex >= 0)
+					{
+						do																										// Loop to keep asking for input if number is negative
+						{
+							System.out.print("Please enter quantity to be removed: ");											// Request input for quantity to be added
+							if (console.hasNextInt())																			// Check if input is an integer
+							{
+								removeQuantity = console.nextInt();															// If input is an integer, assign to variable productQuantity
+								console.nextLine();																			// Clears any extra characters from buffer
+								System.out.print("\n");
+								if (removeQuantity <= 0)																		// If the entered number is negative or zero
+									System.out.println("Invalid input. Please enter a positive number.\n");						// Inform user invalid input and ask for another number
+							}
+						}
+						while (removeQuantity <= 0);																			// Exit loop if quantity is greater than zero
+						
+						if (removeQuantity > d[i].getProductQuantity(productIndex))
+							System.out.println("Invalid input, quantity selected exceeds available quantity. Nothing has been removed\n");
+						else if (removeQuantity < d[i].getProductQuantity(productIndex))
+						{
+							System.out.println(removeQuantity+" items of product "+d[i].getProductName(productIndex)+" have been removed from depot "+d[i].getName()+"\n");
+							d[i].setProductQuantity(d[i].getProductQuantity(productIndex)-removeQuantity, productIndex);
+						}
+						else if (removeQuantity == d[i].getProductQuantity(productIndex))
+						{
+							System.out.println("All items of product "+d[i].getProductName(productIndex)+" have been removed from depot "+d[i].getName()+" and the product has been removed.\n");
+							d[i].clearProduct(productIndex);
+						}
+					}
+				}		
+				else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
+					System.out.println("Depot with that name does not exist. No product has been removed.\n");
+				else if (depotEntered != null && depotEntered.length() == 0)
+					System.out.println("Nothing entered. No product has been removed\n");						
 			}
-			else if (productEntered != null && productEntered.length() > 0 && productLocation[2] > 0)
-				
-			availableDepots();																						// Display available depots to add to
-			System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
-			depotEntered = console.nextLine();																			// Read depot name from console
-			System.out.print("\n");
-			
+			else if (productEntered != null && productEntered.length() > 0 && productLocation[2] == 0)
+				System.out.println("Product with that name does not exist. Nothing has been removed\n");
+			else if (productEntered != null && productEntered.length() == 0)
+				System.out.println("Nothing entered. No product has been removed\n");
 		}
 		else
-		{
-			System.out.println("No depots exist\n");															// If no depots exist, inform user
-			enterContinue();																						// Call method to request user to press enter to continue
-		}
+			System.out.println("No depots exist\n");
+		enterContinue();
 	}
 	
 	/*/****************************************************************
@@ -380,82 +426,6 @@ public class Interface
 	 * If the quantity is 1, the clearProduct method is called from
 	 * the Depot class to clear the product.
 	 ******************************************************************/
-	public void removeFromDepot(String productName, String depotStored, int i)
-	{
-		String depotName = null;																				// Initialise variable for depot name
-		System.out.print("Please enter depot name for product to be removed: ");								// Request input for depot name
-		depotName = console.nextLine();																			// Read depot name from console
-		System.out.print("\n");
-		if (depotName != null && depotName.length() > 0)														// Check if something was entered
-		{
-			if (depot1 != null && depotName.equalsIgnoreCase(depot1.getName()))									// If depot 1 exists and name entered matches name of depot 1
-			{
-				if (depotStored.equalsIgnoreCase(depotName) && depot1.getProductQuantity(i) > 1)				// If depot name passed to method matches depot name name entered and product quantity is greater than 1
-				{
-					System.out.println("Old quantity of "+depot1.getProductName(i)+" in depot "+depot1.getName()+": "+depot1.getProductQuantity(i)+"\n"); // Print product info and current quantity
-					depot1.setProductQuantity(depot1.getProductQuantity(i)-1, i);								// Subtract 1 from product quantity
-					System.out.println("One item of product "+depot1.getProductName(i)+" has been removed from depot "+depot1.getName()+"\n");
-					System.out.println("New quantity of "+depot1.getProductName(i)+" in depot "+depot1.getName()+": "+depot1.getProductQuantity(i)+"\n");	// Print product info and new quantity
-				}
-				else if (depotStored.equalsIgnoreCase(depotName) && depot1.getProductQuantity(i) == 1)			// If depot name passed to method matches depot name entered and product quantity is 1
-				{
-					depot1.clearProduct(i);																		// Delete the product
-					System.out.println("Product "+productName+" has been removed from depot "+depot1.getName()+"\n"); // Inform user product has been removed
-				}
-				else if (depotStored.equalsIgnoreCase("both") && depot1.getProductQuantity(i) > 1)
-				{
-					System.out.println("Old quantity of "+depot1.getProductName(i)+" in depot "+depot1.getName()+": "+depot1.getProductQuantity(i)+"\n"); // Print product info and current quantity
-					depot1.setProductQuantity(depot1.getProductQuantity(i)-1, i);								// Subtract 1 from product quantity
-					System.out.println("One item of product "+depot1.getProductName(i)+" has been removed from depot "+depot1.getName()+"\n");
-					System.out.println("New quantity of "+depot1.getProductName(i)+" in depot "+depot1.getName()+": "+depot1.getProductQuantity(i)+"\n");	// Print product info and new quantity
-				}
-				else if (depotStored.equalsIgnoreCase("both") && depot1.getProductQuantity(i) == 1)			// If depot name passed to method matches depot name entered and product quantity is 1
-				{
-					depot1.clearProduct(i);																		// Delete the product
-					System.out.println("Product "+productName+" has been removed from depot "+depot1.getName()+"\n"); // Inform user product has been removed
-				}
-				else																							// If product does not exist in depot 1, inform user
-					System.out.println("Product with that name does not exist in depot "+depot1.getName()+". Product has not been removed.\n");
-			}
-			
-			else if (depot2 != null && depotName.equalsIgnoreCase(depot2.getName()))							// If depot 2 exists and name entered matches name of depot 2
-			{
-				if (depotStored.equalsIgnoreCase(depotName) && depot2.getProductQuantity(i) > 1)				// If depot name passed to method matches depot name name entered and product quantity is greater than 1
-				{
-					System.out.println("Old quantity of "+depot2.getProductName(i)+" in depot "+depot2.getName()+": "+depot2.getProductQuantity(i)+"\n");	// Print product info and current quantity
-					depot2.setProductQuantity(depot2.getProductQuantity(i)-1, i);								// Subtract 1 from product quantity
-					System.out.println("One item of product "+depot2.getProductName(i)+" has been removed from depot "+depot2.getName()+"\n");
-					System.out.println("New quantity of "+depot2.getProductName(i)+" in depot "+depot2.getName()+": "+depot2.getProductQuantity(i)+"\n");	// Print product info and new quantity
-				}
-				else if (depotStored.equalsIgnoreCase(depotName) && depot2.getProductQuantity(i) == 1)			// If depot name passed to method matches depot name entered and product quantity is 1
-				{
-					depot2.clearProduct(i);																		// Delete the product
-					System.out.println("Product "+productName+" has been removed from depot "+depot2.getName()+"\n");	// Inform user product has been removed
-				}
-				else if (depotStored.equalsIgnoreCase("both") && depot2.getProductQuantity(i) > 1)				// If depot name passed to method matches depot name name entered and product quantity is greater than 1
-				{
-					System.out.println("Old quantity of "+depot2.getProductName(i)+" in depot "+depot2.getName()+": "+depot2.getProductQuantity(i)+"\n");	// Print product info and current quantity
-					depot2.setProductQuantity(depot2.getProductQuantity(i)-1, i);								// Subtract 1 from product quantity
-					System.out.println("One item of product "+depot2.getProductName(i)+" has been removed from depot "+depot2.getName()+"\n");
-					System.out.println("New quantity of "+depot2.getProductName(i)+" in depot "+depot2.getName()+": "+depot2.getProductQuantity(i)+"\n");	// Print product info and new quantity
-				}
-				else if (depotStored.equalsIgnoreCase("both") && depot2.getProductQuantity(i) == 1)			// If depot name passed to method matches depot name entered and product quantity is 1
-				{
-					depot2.clearProduct(i);																		// Delete the product
-					System.out.println("Product "+productName+" has been removed from depot "+depot2.getName()+"\n");	// Inform user product has been removed
-				}
-				else																							// If product does not exist in depot 1, inform user
-					System.out.println("Product with that name does not exist in depot "+depot2.getName()+". Product has not been removed.\n");
-			}
-			
-			else																								// If depot name entered does not match an existing depot, inform user
-				System.out.println("Depot with that name does not exist. Product has not been removed\n");
-		}
-		
-		else if (depotName != null && depotName.length() == 0)													// If nothing was entered, inform user
-			System.out.println("Nothing entered. Product has not been added.\n");
-		enterContinue();																						// Call method to request user to press enter to continue
-	}
 
 	/*/**************************************************************************************************************************************************************
 	 * Request a list of products
@@ -471,22 +441,33 @@ public class Interface
 	 * 
 	 ****************************************************************************************************************************************************************/
 	public void listProduct()
-	{
-		String productEntered = null, depotEntered = null;															// Initialise variables for product name and depot name input
-		if (depotCount > 0)																	// Check if either depot 1 or depot 2 exist
+	{				
+		String depotEntered = null;
+		if (depotCount > 0)																	
 		{
 			availableDepots();																					// Call method to display available depots
-			System.out.print("Please enter name of a depot: ");													// Request user to input name of depot
-			depotEntered = console.nextLine();																		// Read depot name input from console
+			System.out.print("Please enter name of a depot: ");
+			depotEntered = console.nextLine();																		
 			System.out.print("\n");
-			if (depotEntered !=null && depotEntered.length() > 0 && )														// Check if something was entered
+			int i = getDepotIndex(depotEntered);
+			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() > 0)
 			{
-				
+				for (int j = 0; j < d[i].getProduct(); j++)
+				{
+					if (d[i].getProduct() > 0 && d[i].getProductName(j) != null)
+						System.out.println("Product "+d[i].getProductName(j)+" has price: $"+String.format("%.2f", d[i].getProductPrice(j))+", weight: "+d[i].getProductWeight(j)+"kg, and quantity: "+d[i].getProductQuantity(j)); // Print product info
+				}
+				System.out.println();
 			}
-		else
-		{
-			System.out.println("No depots exist\n");															// If no depots exist, inform user
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() == 0)
+				System.out.println("No products exist in depot "+d[i].getName()+"\n");
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
+				System.out.println("Depot with that name does not exist.\n");
+			else if (depotEntered != null && depotEntered.length() == 0)
+				System.out.println("Nothing entered.\n");
 		}
+		else
+			System.out.println("No depots exist\n");															// If no depots exist, inform user
 		enterContinue();																						// Call method to request user to press enter to continue
 	}
 	
@@ -515,7 +496,7 @@ public class Interface
 				{
 					for (int j = 0; j < d[i].getProduct(); j++)
 					{
-						if (d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
 							System.out.println("Product "+d[i].getProductName(j)+" is in depot "+d[i].getName()+" with quantity "+d[i].getProductQuantity(j)+"\n");
 					}
 				}
@@ -545,63 +526,38 @@ public class Interface
 	 ****************************************************************************************************************************************************************/	
 	public void valueProduct()
 	{
-		String productName = null, depotName = null;															// Initialise variable for product name and depot name input
+		String productEntered = null, depotEntered = null;															// Initialise variable for product name and depot name input
 		double totalProductPrice = 0;																			// Initialise variable for total product price
 		
-		if (depot1 != null || depot2 != null)																	// Check if either depot 1 or depot 2 exists
+		if (depotCount > 0)																						// Check if either depot 1 or depot 2 exists
 		{
 			availableDepots();																					// Call method to display available depots
 			System.out.print("Please enter name of a depot: ");													// Request user to input name of depot
-			depotName = console.nextLine();																		// Read depot name from console
+			depotEntered = console.nextLine();																		// Read depot name from console
 			System.out.print("\n");
-			
-			if (depotName !=null && depotName.length() > 0)														// Check if something was entered
+			int i = getDepotIndex(depotEntered);
+			if(depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() > 0)																	// Check if depot 1 has any products in it
 			{
-				if (depot1 != null && depotName.equalsIgnoreCase(depot1.getName()))								// If depot 1 exists and name entered matches the name of depot 1
+				for(int j = 0; j <= d[i].getProduct(); j++)																// Loop to check each product in depot
 				{
-					if(depot1.getProduct() > 0)																	// Check if depot 1 has any products in it
+					productEntered = d[i].getProductName(j);												// Read product name from product in depot
+					if (productEntered != null)															// If product name is not null (meaning the product exists)
 					{
-						for(int i = 1; i <= 3; i++)																// Loop to check each product in depot
-						{
-							productName = depot1.getProductName(i);												// Read product name from product in depot
-							if (productName != null)															// If product name is not null (meaning the product exists)
-							{
-								totalProductPrice += (depot1.getProductPrice(i)*depot1.getProductQuantity(i));	// Add product price to total product price
-							}	
-						}
-						System.out.println("Total cumulative value of products in depot "+depot1.getName()+": $"+String.format("%.2f", totalProductPrice)+"\n"); // Print total product value
-					}
-					else 
-						System.out.println("No products exist in depot "+depot1.getName()+"\n"); 				// Print total product value
+						totalProductPrice += (d[i].getProductPrice(j)*d[i].getProductQuantity(j));	// Add product price to total product price
+					}	
 				}
-				
-				else if (depot2 != null && depotName.equalsIgnoreCase(depot2.getName()))						// If depot 2 exists and depot name entered matches depot 2
-				{
-					if(depot2.getProduct() > 0)																	// Check if depot 2 has any products in it
-					{
-						for(int i = 1; i <= 3; i++)																// Loop to check each product in depot
-						{
-							productName = depot2.getProductName(i);												// Read product name from product in depot
-							if (productName != null)															// If product name is not null (meaning the product exists)
-							{
-								totalProductPrice += (depot2.getProductPrice(i)*depot2.getProductQuantity(i));	// Add product price to total product price
-							}
-						}
-						System.out.println("Total cumulative value of products in depot "+depot2.getName()+": $"+String.format("%.2f", totalProductPrice)+"\n"); // Print total product value
-					}
-					else 
-						System.out.println("No products exist in depot "+depot2.getName()+"\n"); 				// Print total product value
-				}
-				else
-					System.out.println("Depot with that name does not exist.\n");								// If depot name does not match either depot, inform user
+				System.out.println("Total cumulative value of products in depot "+d[i].getName()+": $"+String.format("%.2f", totalProductPrice)+"\n"); // Print total product value
 			}
-			else
-				System.out.println("Nothing entered.\n");														// If nothing was entered, inform user
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() == 0)
+				System.out.println("No products exist in depot "+d[i].getName()+"\n"); 				
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
+				System.out.println("Depot with that name does not exist.\n");
+			else if (depotEntered != null && depotEntered.length() == 0)
+				System.out.println("Nothing entered.\n");
+				
 		}
 		else
-		{
 			System.out.println("No depots exist\n");															// If no depots exist, inform user
-		}
 		enterContinue();																						// Call method to request user to press enter to continue	
 	}
 	
