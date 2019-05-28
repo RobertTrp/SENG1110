@@ -1,14 +1,15 @@
 
-
 /*/*************************************************************************************************************
- * Programming assignment 1
+ * Programming assignment 2
  * 
- * 		   Authors: Kate McAlpine and Robert Trpeski
- * Student numbers:	   c3078083		     c3244194
+ * 		    Author:	Robert Trpeski
+ * Student numbers:	c3244194
  * 			   Lab:	Wednesday 10am-12pm - ES105
  ***************************************************************************************************************/
 
 import java.util.*;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
 
 public class Interface
 {
@@ -44,7 +45,9 @@ public class Interface
 			System.out.println("Request product list				(6)\n");
 			System.out.println("Request product location			(7)\n");
 			System.out.println("Request total product value			(8)\n");
-			System.out.println("Exit						(9)\n");
+			System.out.println("Export data to file          			(9)\n");
+			System.out.println("Import data from file         	 		(10)\n");
+			System.out.println("Exit						(11)\n");
 			System.out.println("********************************************************");
 			System.out.print("Please enter a number: ");														// Request menu option input from user
 			
@@ -83,13 +86,20 @@ public class Interface
 	            case 8:
 	            	valueProduct();
 	            	break;
-	            case 9: 																						//Exit
+	            case 9:
+	            	exportData();
+	            	break;
+	            case 10:
+	            	importData();
+	            	break;
+	            case 11: 																						//Exit
 	            	System.out.println("Program has terminated");
 	            	break;
-	            default: System.out.println("Invalid option");
+	            default: System.out.println("Invalid option\n");
+	            		 enterContinue();
 	        }
 	    }
-	        while(option!=9);																					// Loop menu until user inputs 9
+	        while(option!=11);																					// Loop menu until user inputs 9
 	}
 	
 	/*/************************************************************************************************************************************************************************
@@ -108,11 +118,13 @@ public class Interface
 		if (depotCount < 4) {
 			System.out.print("Please enter name for depot to be added: ");
 			depotEntered = console.nextLine();
+			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			while (getDepotIndex(depotEntered) >= 0)
 			{
 				System.out.print("Name already exists. Please enter a different name: ");					// Request the user to input a different depot name
 				depotEntered = console.nextLine();																// Read depot name entered from console
+				depotEntered = depotEntered.replace(" ", "-");
 				System.out.print("\n");
 			}
 			if (depotEntered != null && depotEntered.length() > 0)
@@ -161,6 +173,7 @@ public class Interface
 			availableDepots();
 			System.out.print("Please enter name for depot to be removed: ");
 			depotEntered = console.nextLine();
+			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			
 			
@@ -236,6 +249,7 @@ public class Interface
 		{
 			System.out.print("Please enter name of product to add: ");											// Request user to input product name to be added
 			productEntered = console.nextLine();																	// Read product name input from console
+			productEntered = productEntered.replace(" ", "-");
 			System.out.print("\n");
 			int[] productLocation = checkProductInDepot(productEntered);
 			if (productEntered != null && productEntered.length() > 0 && productLocation[2] > 0)
@@ -245,6 +259,7 @@ public class Interface
 			availableDepots();																						// Display available depots to add to
 			System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
 			depotEntered = console.nextLine();																			// Read depot name from console
+			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			int i = getDepotIndex(depotEntered);
 			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
@@ -335,6 +350,7 @@ public class Interface
 		{
 			System.out.print("Please enter name of product to remove: ");											// Request user to input product name to be added
 			productEntered = console.nextLine();																	// Read product name input from console
+			productEntered = productEntered.replace(" ", "-");
 			System.out.print("\n");
 			int[] productLocation = checkProductInDepot(productEntered);
 			if (productEntered != null && productEntered.length() > 0 && productLocation[2] > 0)
@@ -353,6 +369,7 @@ public class Interface
 				System.out.println();
 				System.out.print("Please enter depot name for product to be removed from: ");									// Request input for depot name
 				depotEntered = console.nextLine();																			// Read depot name from console
+				depotEntered = depotEntered.replace(" ", "-");
 				System.out.print("\n");
 				int i = getDepotIndex(depotEntered);
 				if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
@@ -448,6 +465,7 @@ public class Interface
 			availableDepots();																					// Call method to display available depots
 			System.out.print("Please enter name of a depot: ");
 			depotEntered = console.nextLine();																		
+			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			int i = getDepotIndex(depotEntered);
 			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() > 0)
@@ -488,6 +506,7 @@ public class Interface
 			String productEntered = null;																			// Initialise variable for product name input
 			System.out.print("Please enter name of product to locate: ");										// Request user to input name of product to locate
 			productEntered = console.nextLine();																	// Read product name from console
+			productEntered = productEntered.replace(" ", "-");
 			System.out.print("\n");
 			int[] productLocation = checkProductInDepot(productEntered);
 			if (productEntered !=null && productEntered.length() > 0 && productLocation[2] > 0)													// Check if something was entered
@@ -534,6 +553,7 @@ public class Interface
 			availableDepots();																					// Call method to display available depots
 			System.out.print("Please enter name of a depot: ");													// Request user to input name of depot
 			depotEntered = console.nextLine();																		// Read depot name from console
+			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			int i = getDepotIndex(depotEntered);
 			if(depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() > 0)																	// Check if depot 1 has any products in it
@@ -559,6 +579,52 @@ public class Interface
 		else
 			System.out.println("No depots exist\n");															// If no depots exist, inform user
 		enterContinue();																						// Call method to request user to press enter to continue	
+	}
+	
+	public void exportData()
+	{
+		String fileName = "out.txt";
+		PrintWriter outputStream;
+		
+		try
+		{
+			outputStream = new PrintWriter(fileName);
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println ("Error opening the file "+fileName+"\n");
+			enterContinue();
+			return;
+		}
+		
+		if (depotCount > 0)
+		{
+			for (int i = 0; i < depotCount; i++)
+			{
+				if (d[i].getProduct() > 0)
+				{
+					for (int j = 0; j < d[i].getProduct(); j++)
+					{
+						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null)
+						{
+							outputStream.println(d[i].getName()+" "+d[i].getProductName(j)+" "+d[i].getProductPrice(j)+" "+d[i].getProductWeight(j)+" "+d[i].getProductQuantity(j));
+						}
+					}
+				}
+				else
+				{
+					outputStream.println(d[i].getName());
+				}
+			}
+		}
+		outputStream.close();
+		System.out.println("Data exported to "+fileName+" successfully.\n");
+		enterContinue();
+	}
+	
+	public void importData()
+	{
+		
 	}
 	
 	/*/**************************************************************************************************************************************************************

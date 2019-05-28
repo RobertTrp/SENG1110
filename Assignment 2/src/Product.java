@@ -1,10 +1,9 @@
 
-
 /*/*************************************************************************************************************
- * Programming assignment 1
+ * Programming assignment 2
  * 
- * 		   Authors: Kate McAlpine and Robert Trpeski
- * Student numbers:	   c3078083		     c3244194
+ * 		    Author:	Robert Trpeski
+ * Student numbers:	c3244194
  * 			   Lab:	Wednesday 10am-12pm - ES105
  ***************************************************************************************************************/
 
