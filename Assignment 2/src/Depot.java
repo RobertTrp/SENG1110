@@ -13,22 +13,6 @@ public class Depot
 	private Product[] p = new Product[5];
 	private int productCount = 0;
 	
-	public void sortProduct()
-	{
-		Product temp;
-        for (int i = 0; i < productCount; i++) 
-        {
-            for (int j = i + 1; j < productCount; j++) 
-            {
-                if (p[i].getName().compareTo(p[j].getName())>0) 
-                {
-                    temp = p[i];
-                    p[i] = p[j];
-                    p[j] = temp;
-                }
-            }
-        }
-	}
 	/*/************************************************************************************************************************************************************************
 	 * When this method is called it returns the private variable 'name'
 	 **************************************************************************************************************************************************************************/
@@ -79,13 +63,29 @@ public class Depot
 		return productCount;
 	}
 	
-	public void removeProduct()
+	/*/**************************************************************************************************************************************************************
+	 * Sort products alphabetically
+	 ****************************************************************************************************************************************************************/
+	public void sortProduct()
 	{
-		
+		Product temp;
+        for (int i = 0; i < productCount; i++) 
+        {
+            for (int j = i + 1; j < productCount; j++) 
+            {
+                if (p[i].getName().compareTo(p[j].getName())>0) 
+                {
+                    temp = p[i];
+                    p[i] = p[j];
+                    p[j] = temp;
+                }
+            }
+        }
 	}
 	
-	
-	
+	/*/**************************************************************************************************************************************************************
+	 * Returns index of product in depot if name passed through matches
+	 ****************************************************************************************************************************************************************/
 	public int checkProductPosition(String nameEntered)
 	{
 		for (int i = 0; i <= productCount; i++)
@@ -96,6 +96,9 @@ public class Depot
 		return -1;
 	}
 	
+	/*/**************************************************************************************************************************************************************
+	 * Returns name of product if name passed through matches
+	 ****************************************************************************************************************************************************************/
 	public String checkProductName(String nameEntered)
 	{
 		for (int i = 0; i <= productCount; i++)
