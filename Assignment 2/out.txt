@@ -1,7 +1,8 @@
-newcastle-depot apple 1.50 0.1 20
-newcastle-depot bowl 4.00 0.3 5
-newcastle-depot pen 5.00 0.05 10
-sydney-depot pen 5.00 0.05 50
-sydney-depot bag 20.00 1.0 8
-melbourne-depot
-hobart-depot fish 8.50 1.5 5
+sydney pen 5.00 0.05 50
+sydney bag 20.00 1.0 8
+newcastle bowl 4.00 0.3 5
+newcastle zebra 5.22 0.11 20
+newcastle pen 5.00 0.05 10
+newcastle egg 1.22 3.55 30
+melbourne
+hobart fish 8.50 1.5 5

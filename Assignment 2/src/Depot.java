@@ -13,7 +13,22 @@ public class Depot
 	private Product[] p = new Product[5];
 	private int productCount = 0;
 	
-	
+	public void sortProduct()
+	{
+		Product temp;
+        for (int i = 0; i < productCount; i++) 
+        {
+            for (int j = i + 1; j < productCount; j++) 
+            {
+                if (p[i].getName().compareTo(p[j].getName())>0) 
+                {
+                    temp = p[i];
+                    p[i] = p[j];
+                    p[j] = temp;
+                }
+            }
+        }
+	}
 	/*/************************************************************************************************************************************************************************
 	 * When this method is called it returns the private variable 'name'
 	 **************************************************************************************************************************************************************************/
@@ -59,7 +74,7 @@ public class Depot
 	/*/************************************************************************************************************************************************************************
 	 * This method returns how many products exist in the depot
 	 **************************************************************************************************************************************************************************/
-	public int getProduct()
+	public int getProductCount()
 	{
 		return productCount;
 	}

@@ -143,7 +143,7 @@ public class Interface
 	
 	public int getDepotIndex(String depotEntered)
 	{
-		for (int i = 0; i <= depotCount; i++)
+		for (int i = 0; i < depotCount; i++)
 		{
 			if (d[i] != null && depotEntered.equalsIgnoreCase(d[i].getName()))
 				return i;
@@ -205,15 +205,33 @@ public class Interface
 	{
 		if (depotCount > 0)
 		{
+			sortDepot();
 			for (int i = 0; i < depotCount; i++)
 			{																															
-				System.out.println("Depot "+d[i].getName()+" has "+d[i].getProduct()+" products");										// Print depot 1 info
+				System.out.println("Depot "+d[i].getName()+" has "+d[i].getProductCount()+" products");										// Print depot 1 info
 			}
 		}
 		else
 			System.out.println("No depots exist");
 		System.out.println();
 		enterContinue();
+	}
+	
+	public void sortDepot()
+	{
+		Depot temp;
+        for (int i = 0; i < depotCount; i++) 
+        {
+            for (int j = i + 1; j < depotCount; j++) 
+            {
+                if (d[i].getName().compareTo(d[j].getName())>0) 
+                {
+                    temp = d[i];
+                    d[i] = d[j];
+                    d[j] = temp;
+                }
+            }
+        }
 	}
 		
 	/*/**************************************************************************************************************************************************************
@@ -264,10 +282,10 @@ public class Interface
 			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
 			{
 				int productIndex = -1;
-				for (int j = 0; j < d[i].getProduct(); j++)
+				for (int j = 0; j < d[i].getProductCount(); j++)
 				{
 					
-					if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+					if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
 					{
 						productIndex = j;
 					}
@@ -278,14 +296,14 @@ public class Interface
 					d[i].setProductQuantity(d[i].getProductQuantity(productIndex)+addQuantity(), productIndex);
 					System.out.println("New quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");		// Print product info with new quantity
 				}
-				else if (d[i].getProduct() < 5 && productLocation[2] > 0)
+				else if (d[i].getProductCount() < 5 && productLocation[2] > 0)
 				{
 					int j = productLocation[0]; // depot index location of existing product
 					int k = productLocation[1]; // product index location of existing product
 					d[i].setProduct(d[j].getProductName(k), addQuantity(), d[j].getProductWeight(k), d[j].getProductPrice(k));
 					System.out.println("Product "+d[j].getProductName(k)+" successfully added to depot "+d[i].getName()+"\n");
 				}
-				else if (d[i].getProduct() < 5 && productLocation[2] == 0)
+				else if (d[i].getProductCount() < 5 && productLocation[2] == 0)
 				{
 					d[i].setProduct(productEntered, addQuantity(), productWeight(), productPrice());
 					System.out.println("Product "+productEntered+" successfully added to depot "+d[i].getName()+"\n");				// Inform user product has been successfully added
@@ -311,9 +329,9 @@ public class Interface
 		{
 			for (int i = 0; i < depotCount; i++)
 			{
-				for (int j = 0; j < d[i].getProduct(); j++)
+				for (int j = 0; j < d[i].getProductCount(); j++)
 				{
-					if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+					if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
 					{
 							location[0] = i;
 							location[1] = j;
@@ -324,45 +342,6 @@ public class Interface
 		}
 		return location;
 	}
-	
-	
-	/*public void addProduct(String depotEntered, String productEntered)
-	{
-		int[] productLocation = checkProductInDepot(productEntered);
-		int i = getDepotIndex(depotEntered);
-		if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
-		{
-			int productIndex = -1;
-			for (int j = 0; j < d[i].getProduct(); j++)
-			{
-				
-				if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
-				{
-					productIndex = j;
-				}
-			}
-			if (productIndex >= 0)
-			{
-				System.out.println("Current quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");	// Print product info with current quantity
-				d[i].setProductQuantity(d[i].getProductQuantity(productIndex)+addQuantity(), productIndex);
-				System.out.println("New quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");		// Print product info with new quantity
-			}
-			else if (d[i].getProduct() < 5 && productLocation[2] > 0)
-			{
-				int j = productLocation[0]; // depot index location of existing product
-				int k = productLocation[1]; // product index location of existing product
-				d[i].setProduct(d[j].getProductName(k), addQuantity(), d[j].getProductWeight(k), d[j].getProductPrice(k));
-				System.out.println("Product "+d[j].getProductName(k)+" successfully added to depot "+d[i].getName()+"\n");
-			}
-			else if (d[i].getProduct() < 5 && productLocation[2] == 0)
-			{
-				d[i].setProduct(productEntered, addQuantity(), productWeight(), productPrice());
-				System.out.println("Product "+productEntered+" successfully added to depot "+d[i].getName()+"\n");				// Inform user product has been successfully added
-			}
-			else
-				System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
-		}
-	}*/
 	
 	
 	/*/**************************************************************************************************************************************************************
@@ -396,9 +375,9 @@ public class Interface
 				System.out.println("Product "+d[productLocation[0]].getProductName(productLocation[1])+" exists in the following depots:");				// Display available depots to add to
 				for (int i = 0; i < depotCount; i++)
 				{
-					for (int j = 0; j < d[i].getProduct(); j++)
+					for (int j = 0; j < d[i].getProductCount(); j++)
 					{
-						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
 						{
 							System.out.println(d[i].getName()+" with quantity "+d[i].getProductQuantity(j));
 						}
@@ -413,9 +392,9 @@ public class Interface
 				if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
 				{
 					int productIndex = -1;
-					for (int j = 0; j < d[i].getProduct(); j++)
+					for (int j = 0; j < d[i].getProductCount(); j++)
 					{
-						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
 						{
 							productIndex = j;
 						}
@@ -506,16 +485,17 @@ public class Interface
 			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			int i = getDepotIndex(depotEntered);
-			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() > 0)
+			d[i].sortProduct();
+			if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProductCount() > 0)
 			{
-				for (int j = 0; j < d[i].getProduct(); j++)
+				for (int j = 0; j < d[i].getProductCount(); j++)
 				{
-					if (d[i].getProduct() > 0 && d[i].getProductName(j) != null)
+					if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null)
 						System.out.println("Product "+d[i].getProductName(j)+" has price: $"+String.format("%.2f", d[i].getProductPrice(j))+", weight: "+d[i].getProductWeight(j)+"kg, and quantity: "+d[i].getProductQuantity(j)); // Print product info
 				}
 				System.out.println();
 			}
-			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() == 0)
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProductCount() == 0)
 				System.out.println("No products exist in depot "+d[i].getName()+"\n");
 			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
 				System.out.println("Depot with that name does not exist.\n");
@@ -551,9 +531,9 @@ public class Interface
 			{
 				for (int i = 0; i < depotCount; i++)
 				{
-					for (int j = 0; j < d[i].getProduct(); j++)
+					for (int j = 0; j < d[i].getProductCount(); j++)
 					{
-						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+						if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
 							System.out.println("Product "+d[i].getProductName(j)+" is in depot "+d[i].getName()+" with quantity "+d[i].getProductQuantity(j)+"\n");
 					}
 				}
@@ -594,9 +574,9 @@ public class Interface
 			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			int i = getDepotIndex(depotEntered);
-			if(depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() > 0)																	// Check if depot 1 has any products in it
+			if(depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProductCount() > 0)																	// Check if depot 1 has any products in it
 			{
-				for(int j = 0; j <= d[i].getProduct(); j++)																// Loop to check each product in depot
+				for(int j = 0; j <= d[i].getProductCount(); j++)																// Loop to check each product in depot
 				{
 					productEntered = d[i].getProductName(j);												// Read product name from product in depot
 					if (productEntered != null)															// If product name is not null (meaning the product exists)
@@ -606,7 +586,7 @@ public class Interface
 				}
 				System.out.println("Total cumulative value of products in depot "+d[i].getName()+": $"+String.format("%.2f", totalProductPrice)+"\n"); // Print total product value
 			}
-			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProduct() == 0)
+			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0 && d[i].getProductCount() == 0)
 				System.out.println("No products exist in depot "+d[i].getName()+"\n"); 				
 			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
 				System.out.println("Depot with that name does not exist.\n");
@@ -639,11 +619,11 @@ public class Interface
 		{
 			for (int i = 0; i < depotCount; i++)
 			{
-				if (d[i].getProduct() > 0)
+				if (d[i].getProductCount() > 0)
 				{
-					for (int j = 0; j < d[i].getProduct(); j++)
+					for (int j = 0; j < d[i].getProductCount(); j++)
 					{
-						if (d[i].getProduct() > 0 && d[i].getProductName(j) != null)
+						if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null)
 						{
 							outputStream.println(d[i].getName()+" "+d[i].getProductName(j)+" "+d[i].getProductPrice(j)+" "+d[i].getProductWeight(j)+" "+d[i].getProductQuantity(j));
 						}
@@ -697,12 +677,41 @@ public class Interface
 				depotRead = temp;
 			if (productRead != null)
 			{
-				System.out.println(depotRead+" "+productRead+" "+priceRead+" "+weightRead+" "+quantityRead);
-				if (getDepotIndex(depotRead) == -1)
+				if (depotCount < 4)
+				{
 					addDepotFromFile(depotRead);
-				else if (checkProductInDepot(depotRead)[2] > 0)
-					System.out.println();
-					
+					int[] productLocation = checkProductInDepot(productRead);
+					int i = getDepotIndex(depotRead);
+					int productIndex = -1;
+					for (int j = 0; j < d[i].getProductCount(); j++)
+					{
+						
+						if (d[i].getProductCount() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productRead))
+						{
+							productIndex = j;
+						}
+					}
+					if (productIndex >= 0)
+					{
+						System.out.println("Current quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");	// Print product info with current quantity
+						d[i].setProductQuantity(d[i].getProductQuantity(productIndex)+quantityRead, productIndex);
+						System.out.println("New quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");		// Print product info with new quantity
+					}
+					else if (d[i].getProductCount() < 5 && productLocation[2] > 0)
+					{
+						int j = productLocation[0]; // depot index location of existing product
+						int k = productLocation[1]; // product index location of existing product
+						d[i].setProduct(d[j].getProductName(k), quantityRead, d[j].getProductWeight(k), d[j].getProductPrice(k));
+						System.out.println("Product "+d[j].getProductName(k)+" successfully added to depot "+d[i].getName()+"\n");
+					}
+					else if (d[i].getProductCount() < 5 && productLocation[2] == 0)
+					{
+						d[i].setProduct(productRead, quantityRead, weightRead, priceRead);
+						System.out.println("Product "+productRead+" successfully added to depot "+d[i].getName()+"\n");				// Inform user product has been successfully added
+					}
+					else
+						System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
+				}
 				
 			}
 			else
@@ -727,15 +736,6 @@ public class Interface
 			System.out.println("Depot with that name already exists. Depot "+depotRead+" has not been added.");
 		else if (depotCount >= 4)
 			System.out.println("4 Depots already exist. Depot "+depotRead+" has not been added.");
-		System.out.println(depotRead);
-	}
-	
-	public void addProductFromFile(String productRead)
-	{
-		if (productRead != null && productRead.length() > 0 && productLocation[2] > 0)
-		{
-			System.out.println("Product with that name already exists in "+checkProductInDepot(productEntered)[2]+" depots.\n");
-		}
 	}
 	
 	/*/**************************************************************************************************************************************************************
