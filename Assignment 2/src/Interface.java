@@ -5,6 +5,8 @@
  * 		    Author:	Robert Trpeski
  * Student numbers:	c3244194
  * 			   Lab:	Wednesday 10am-12pm - ES105
+ * 
+ * All options including alphabetical sorting comleted
  ***************************************************************************************************************/
 
 import java.util.*;
@@ -267,11 +269,11 @@ public class Interface
 	 ****************************************************************************************************************************************************************/
 	public void addProduct()
 	{
-		String productEntered = null;																						// Initialise variable for product name input
+		String productEntered = null;																				// Initialise variable for product name input
 		String depotEntered = null;
 		if (depotCount > 0)
 		{
-			System.out.print("Please enter name of product to add: ");											// Request user to input product name to be added
+			System.out.print("Please enter name of product to add: ");												// Request user to input product name to be added
 			productEntered = console.nextLine();																	// Read product name input from console
 			productEntered = productEntered.replace(" ", "-");
 			System.out.print("\n");
@@ -282,7 +284,7 @@ public class Interface
 			}
 			availableDepots();																						// Display available depots to add to
 			System.out.print("Please enter depot name for product to be stored: ");									// Request input for depot name
-			depotEntered = console.nextLine();																			// Read depot name from console
+			depotEntered = console.nextLine();																		// Read depot name from console
 			depotEntered = depotEntered.replace(" ", "-");
 			System.out.print("\n");
 			int i = getDepotIndex(depotEntered);
@@ -316,7 +318,7 @@ public class Interface
 					System.out.println("Product "+productEntered+" successfully added to depot "+d[i].getName()+"\n");				// Inform user product has been successfully added
 				}
 				else
-					System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
+					System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");		// Inform user depot is full
 			}
 			else if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) == -1)
 				System.out.print("A depot with that name does not exist. No product has been added.");
@@ -814,7 +816,7 @@ public class Interface
 			if (console.hasNextInt())																			// Check if input is an integer
 			{
 				productQuantity = console.nextInt();															// If input is an integer, assign to variable productQuantity
-				console.nextLine();																			// Clears any extra characters from buffer
+				console.nextLine();																				// Clears any extra characters from buffer
 				System.out.print("\n");
 				if (productQuantity <= 0)																		// If the entered number is negative or zero
 					System.out.println("Invalid input. Please enter a positive number.\n");						// Inform user invalid input and ask for another number
