@@ -8,8 +8,8 @@
  ***************************************************************************************************************/
 
 import java.util.*;
-import java.io.PrintWriter;
-import java.io.FileNotFoundException;
+import java.util.regex.Pattern;
+import java.io.*;
 
 public class Interface
 {
@@ -624,7 +624,44 @@ public class Interface
 	
 	public void importData()
 	{
+		String fileName = "out.txt";
+		Scanner inputStream = null;
 		
+		try
+		{
+			inputStream = new Scanner(new File(fileName));
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println ("Error opening the file "+fileName+"\n");
+			enterContinue();
+			return;
+		}
+		while (inputStream.hasNextLine())
+		{
+			String depotName = inputStream.next();
+			String productName = null;
+			double productPrice = 0;
+			double productWeight = 0;
+			int productQuantity = 0;
+			if (inputStream.hasNext("[A-Za-z]*"))
+			{
+				productName = inputStream.next();
+				productPrice = inputStream.nextDouble();
+				productWeight = inputStream.nextDouble();
+				productQuantity = inputStream.nextInt();
+			}
+			//System.out.println(depotName);
+			//System.out.println(productName);
+			//System.out.println(productPrice);
+			//System.out.println(productWeight);
+			//System.out.println(productQuantity);
+			if (productName != null)
+				System.out.println(depotName+" "+productName+" "+productPrice+" "+productWeight+" "+productQuantity);
+			else
+				System.out.println(depotName);
+		}
+		enterContinue();
 	}
 	
 	/*/**************************************************************************************************************************************************************
