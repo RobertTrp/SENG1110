@@ -8,7 +8,6 @@
  ***************************************************************************************************************/
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.io.*;
 
 public class Interface
@@ -327,6 +326,45 @@ public class Interface
 	}
 	
 	
+	/*public void addProduct(String depotEntered, String productEntered)
+	{
+		int[] productLocation = checkProductInDepot(productEntered);
+		int i = getDepotIndex(depotEntered);
+		if (depotEntered != null && depotEntered.length() > 0 && getDepotIndex(depotEntered) >= 0)
+		{
+			int productIndex = -1;
+			for (int j = 0; j < d[i].getProduct(); j++)
+			{
+				
+				if (d[i].getProduct() > 0 && d[i].getProductName(j) != null && d[i].getProductName(j).equalsIgnoreCase(productEntered))
+				{
+					productIndex = j;
+				}
+			}
+			if (productIndex >= 0)
+			{
+				System.out.println("Current quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");	// Print product info with current quantity
+				d[i].setProductQuantity(d[i].getProductQuantity(productIndex)+addQuantity(), productIndex);
+				System.out.println("New quantity of "+d[i].getProductName(productIndex)+" in depot "+d[i].getName()+": "+d[i].getProductQuantity(productIndex)+"\n");		// Print product info with new quantity
+			}
+			else if (d[i].getProduct() < 5 && productLocation[2] > 0)
+			{
+				int j = productLocation[0]; // depot index location of existing product
+				int k = productLocation[1]; // product index location of existing product
+				d[i].setProduct(d[j].getProductName(k), addQuantity(), d[j].getProductWeight(k), d[j].getProductPrice(k));
+				System.out.println("Product "+d[j].getProductName(k)+" successfully added to depot "+d[i].getName()+"\n");
+			}
+			else if (d[i].getProduct() < 5 && productLocation[2] == 0)
+			{
+				d[i].setProduct(productEntered, addQuantity(), productWeight(), productPrice());
+				System.out.println("Product "+productEntered+" successfully added to depot "+d[i].getName()+"\n");				// Inform user product has been successfully added
+			}
+			else
+				System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");	// Inform user depot is full
+		}
+	}*/
+	
+	
 	/*/**************************************************************************************************************************************************************
 	 * Remove a product
 	 * 
@@ -338,7 +376,7 @@ public class Interface
 	 * available depots, the user is informed of the product info and
 	 * which depot the product is stored in, the method
 	 * 'removeFromDepot()' is called and the product name,
-	 * depotName the product is stored in and the product number are
+	 * depotEntered the product is stored in and the product number are
 	 * passed as arguments to the method.
 	 ****************************************************************************************************************************************************************/
 	public void removeProduct()
@@ -637,31 +675,67 @@ public class Interface
 			enterContinue();
 			return;
 		}
+		//inputStream.useDelimiter("\\h");
 		while (inputStream.hasNextLine())
 		{
-			String depotName = inputStream.next();
-			String productName = null;
-			double productPrice = 0;
-			double productWeight = 0;
-			int productQuantity = 0;
-			if (inputStream.hasNext("[A-Za-z]*"))
+			String temp = inputStream.nextLine();
+			String depotRead = null;
+			String productRead = null;
+			double priceRead = 0;
+			double weightRead = 0;
+			int quantityRead = 0;
+			if(temp.contains(" "))
 			{
-				productName = inputStream.next();
-				productPrice = inputStream.nextDouble();
-				productWeight = inputStream.nextDouble();
-				productQuantity = inputStream.nextInt();
+				String[] split = temp.split("\\s+");
+				depotRead = split[0];
+				productRead = split[1];
+				priceRead = Double.parseDouble(split[2]);
+				weightRead = Double.parseDouble(split[3]);
+				quantityRead = Integer.parseInt(split[4]);
 			}
-			//System.out.println(depotName);
-			//System.out.println(productName);
-			//System.out.println(productPrice);
-			//System.out.println(productWeight);
-			//System.out.println(productQuantity);
-			if (productName != null)
-				System.out.println(depotName+" "+productName+" "+productPrice+" "+productWeight+" "+productQuantity);
 			else
-				System.out.println(depotName);
+				depotRead = temp;
+			if (productRead != null)
+			{
+				System.out.println(depotRead+" "+productRead+" "+priceRead+" "+weightRead+" "+quantityRead);
+				if (getDepotIndex(depotRead) == -1)
+					addDepotFromFile(depotRead);
+				else if (checkProductInDepot(depotRead)[2] > 0)
+					System.out.println();
+					
+				
+			}
+			else
+				addDepotFromFile(depotRead);
+			
 		}
+		System.out.println();
+		inputStream.close();
 		enterContinue();
+	}
+	
+	public void addDepotFromFile(String depotRead)
+	{
+		if (depotCount < 4 && getDepotIndex(depotRead) == -1)
+		{
+			d[depotCount] = new Depot();
+			d[depotCount].setName(depotRead);
+			System.out.println("Depot "+depotRead+" has been successfully added\n"); 				// Inform the user that depot was successfully created
+			depotCount++;
+		}
+		else if (depotCount < 4 && getDepotIndex(depotRead) >= 0)
+			System.out.println("Depot with that name already exists. Depot "+depotRead+" has not been added.");
+		else if (depotCount >= 4)
+			System.out.println("4 Depots already exist. Depot "+depotRead+" has not been added.");
+		System.out.println(depotRead);
+	}
+	
+	public void addProductFromFile(String productRead)
+	{
+		if (productRead != null && productRead.length() > 0 && productLocation[2] > 0)
+		{
+			System.out.println("Product with that name already exists in "+checkProductInDepot(productEntered)[2]+" depots.\n");
+		}
 	}
 	
 	/*/**************************************************************************************************************************************************************
