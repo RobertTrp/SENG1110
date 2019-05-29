@@ -655,7 +655,7 @@ public class Interface
 			enterContinue();
 			return;
 		}
-		//inputStream.useDelimiter("\\h");
+
 		while (inputStream.hasNextLine())
 		{
 			String temp = inputStream.nextLine();
@@ -669,9 +669,14 @@ public class Interface
 				String[] split = temp.split("\\s+");
 				depotRead = split[0];
 				productRead = split[1];
-				priceRead = Double.parseDouble(split[2]);
-				weightRead = Double.parseDouble(split[3]);
-				quantityRead = Integer.parseInt(split[4]);
+				try{
+					priceRead = Double.parseDouble(split[2]);
+					weightRead = Double.parseDouble(split[3]);
+					quantityRead = Integer.parseInt(split[4]);
+					}catch(Exception e){
+						System.out.println("Error. Invalid format in line.\n");
+						continue;
+					}
 			}
 			else
 				depotRead = temp;
@@ -733,7 +738,7 @@ public class Interface
 			depotCount++;
 		}
 		else if (depotCount < 4 && getDepotIndex(depotRead) >= 0)
-			System.out.println("Depot with that name already exists. Depot "+depotRead+" has not been added.");
+			System.out.println("Depot "+depotRead+" already exists");
 		else if (depotCount >= 4)
 			System.out.println("4 Depots already exist. Depot "+depotRead+" has not been added.");
 	}
