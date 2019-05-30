@@ -6,7 +6,7 @@
  * Student numbers:	c3244194
  * 			   Lab:	Wednesday 10am-12pm - ES105
  * 
- * All options including alphabetical sorting comleted
+ * All options including alphabetical sorting completed
  ***************************************************************************************************************/
 
 import java.util.*;
@@ -723,9 +723,10 @@ public class Interface
 				depotRead = temp;
 			if (productRead != null)
 			{
-				if (depotCount < 4)
+				if (depotCount <= 4)
 				{
-					addDepotFromFile(depotRead);
+					if (depotCount < 4)
+						addDepotFromFile(depotRead);
 					int[] productLocation = checkProductInDepot(productRead);
 					int i = getDepotIndex(depotRead);
 					int productIndex = -1;
@@ -757,8 +758,7 @@ public class Interface
 					}
 					else
 						System.out.println("Depot "+d[i].getName()+" is full. Please remove a product to add another product.\n");
-				}
-				
+				}	
 			}
 			else
 				addDepotFromFile(depotRead);
